@@ -1458,7 +1458,7 @@
         ${rounds.map((round, roundIndex) => {
         const roundMatches = matches.filter(m => m.round === round);
         // Sort matches within round for better visual layout
-        roundMatches.sort((a, b) => (a.id || 0) - (b.id || 0));
+        roundMatches.sort((a, b) => (a.position || 0) - (b.position || 0));
 
         return `<div class="bracket-round">
             <div class="bracket-round-title">${esc(round)}</div>
@@ -1627,7 +1627,17 @@
         <div style="padding:14px 16px">
           <div class="form-grid">
             <div class="field full"><label>TOURNOI</label><select id="m-tournament">${S.tournaments.map(t => `<option value="${t.id}">${esc(t.name)}</option>`).join('')}</select></div>
-            <div class="field full"><label>ROUND</label><input id="m-round" placeholder="Demi-finales, Finale..."></div>
+            <div class="field full"><label>ROUND</label><select id="m-round">
+  <option value="Round 1">Round 1</option>
+  <option value="Round 2">Round 2</option>
+  <option value="Quarter Finals">Quarts</option>
+  <option value="Semi Finals">Demi-finales</option>
+  <option value="Final">Finale</option>
+</select></div>
+<div class="field">
+  <label>POSITION (ordre)</label>
+  <input id="m-pos" type="number" placeholder="1">
+</div>
             <div class="field"><label>ÉQUIPE 1</label><select id="m-t1"><option value="">—</option>${S.teams.map(t => `<option value="${t.id}">${esc(t.name)}</option>`).join('')}</select></div>
             <div class="field"><label>ÉQUIPE 2</label><select id="m-t2"><option value="">—</option>${S.teams.map(t => `<option value="${t.id}">${esc(t.name)}</option>`).join('')}</select></div>
             <div class="field"><label>SCORE 1</label><input id="m-s1" type="number" placeholder="3"></div>
@@ -1753,7 +1763,20 @@
         const pts_win = parseInt(document.getElementById('m-ptw').value) || 10;
         const pts_lose = parseInt(document.getElementById('m-ptl').value) || 4;
         if (!round || !tournament_id) return;
-        await sb.from('matches').insert({ tournament_id, round, team1_id, team2_id, score1: s1 !== '' ? +s1 : null, score2: s2 !== '' ? +s2 : null, winner_id, pts_win, pts_lose });
+        const position = parseInt(document.getElementById('m-pos').value) || 0;
+
+        await sb.from('matches').insert({
+          tournament_id,
+          round,
+          position,
+          team1_id,
+          team2_id,
+          score1: s1 !== '' ? +s1 : null,
+          score2: s2 !== '' ? +s2 : null,
+          winner_id,
+          pts_win,
+          pts_lose
+        });
         await loadData(); render();
       });
       document.querySelectorAll('[data-del-m]').forEach(el => el.addEventListener('click', async () => {
