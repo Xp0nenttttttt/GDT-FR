@@ -105,10 +105,6 @@
       margin-top: 6px
     }
 
-    .match {
-      position: absolute;
-    }
-
     .nav-item {
       display: flex;
       align-items: center;
@@ -1000,6 +996,56 @@
       background: var(--bg3) !important
     }
 
+    /* Credits */
+    .credits-category {
+      padding: 20px;
+      background: var(--bg2);
+      border: 1px solid var(--bd);
+      border-radius: 8px
+    }
+
+    .credits-category-title {
+      font-family: 'Orbitron', monospace;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--or);
+      letter-spacing: 1px;
+      margin-bottom: 16px;
+      text-transform: uppercase
+    }
+
+    .credits-members {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px
+    }
+
+    .credits-member {
+      padding: 12px;
+      background: var(--bg3);
+      border: 1px solid var(--bd2);
+      border-radius: 6px;
+      transition: all .2s
+    }
+
+    .credits-member:hover {
+      border-color: var(--pu);
+      background: rgba(168, 85, 247, .05)
+    }
+
+    .credits-member-name {
+      font-weight: 600;
+      color: var(--tx);
+      margin-bottom: 4px;
+      font-size: 13px
+    }
+
+    .credits-member-role {
+      font-size: 11px;
+      color: var(--mu2);
+      font-style: italic
+    }
+
     /* Mobile */
     @media(max-width:680px) {
       .layout {
@@ -1052,40 +1098,10 @@
       .form-grid {
         grid-template-columns: 1fr
       }
-    }
 
-    .bracket {
-      display: flex;
-      align-items: flex-start;
-    }
-
-    .round-col {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    /* Taille de base d’un match */
-    .match {
-      height: 80px;
-      margin: 10px 0;
-    }
-
-    /* Espacement progressif par round */
-    .round-col:nth-child(1) .match {
-      margin: 10px 0;
-    }
-
-    .round-col:nth-child(2) .match {
-      margin: 60px 0;
-    }
-
-    .round-col:nth-child(3) .match {
-      margin: 140px 0;
-    }
-
-    .round-col:nth-child(4) .match {
-      margin: 300px 0;
+      .credits-members {
+        grid-template-columns: 1fr
+      }
     }
   </style>
 </head>
@@ -1103,7 +1119,13 @@
       teamDetailId: null, // team detail
       user: null,
       teams: [], players: [], tournaments: [], matches: [],
-      loading: true, error: ''
+      loading: true, error: '',
+      credits: [
+        { category: 'Direction', members: [{ name: 'Nom', role: 'Responsable' }] },
+        { category: 'Développement', members: [{ name: 'Nom', role: 'Lead Dev' }, { name: 'Nom', role: 'Développeur' }] },
+        { category: 'Design', members: [{ name: 'Nom', role: 'UI/UX Designer' }] },
+        { category: 'Community', members: [{ name: 'Nom', role: 'Community Manager' }] }
+      ]
     };
 
     // ── Data ──────────────────────────────────────────────
@@ -1189,6 +1211,8 @@
         <div class="nav-section">CLASSEMENTS</div>
         ${ni('ranking-teams', '🏆', 'Équipes')}
         ${ni('ranking-players', '⭐', 'Joueurs')}
+        <div class="nav-section">INFOS</div>
+        ${ni('credits', '👥', 'Crédits')}
         ${S.user ? `<div class="nav-section">ADMIN</div>${ni('admin', '⚙️', 'Administration')}` : ''}
         <div class="sidebar-foot">
           ${S.user
@@ -1221,6 +1245,7 @@
         case 'ranking-players': return buildRankingPlayers();
         case 'tournaments': return buildTournaments();
         case 'tournament-detail': return buildTournamentDetail(pts);
+        case 'credits': return buildCredits();
         case 'admin': return buildAdmin();
         default: return '';
       }
@@ -1496,7 +1521,7 @@
         ${rounds.map((round, roundIndex) => {
         const roundMatches = matches.filter(m => m.round === round);
         // Sort matches within round for better visual layout
-        roundMatches.sort((a, b) => (a.position || 0) - (b.position || 0));
+        roundMatches.sort((a, b) => (a.id || 0) - (b.id || 0));
 
         return `<div class="bracket-round">
             <div class="bracket-round-title">${esc(round)}</div>
@@ -1555,6 +1580,29 @@
     ${ms.length === 0
           ? `<div style="text-align:center;padding:60px;color:var(--mu)">Aucun match programmé.</div>`
           : `<div class="stitle">BRACKET</div>${buildBracketTree(ms, rounds)}`}`;
+    }
+
+    // ── Credits ───────────────────────────────────────────
+    function buildCredits() {
+      return `
+    <div class="page-title">Crédits</div>
+    <div class="page-sub">Équipe derrière GD Tournament</div>
+    <div style="margin-top:28px">
+      ${S.credits.map(category => `
+        <div class="credits-category" style="margin-bottom:32px">
+          <div class="credits-category-title">${esc(category.category)}</div>
+          <div class="credits-members">
+            ${category.members.map(member => `
+              <div class="credits-member">
+                <div class="credits-member-name">${esc(member.name)}</div>
+                <div class="credits-member-role">${esc(member.role)}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `).join('')}
+    </div>
+    `;
     }
 
     // ── Admin ─────────────────────────────────────────────
@@ -1665,17 +1713,7 @@
         <div style="padding:14px 16px">
           <div class="form-grid">
             <div class="field full"><label>TOURNOI</label><select id="m-tournament">${S.tournaments.map(t => `<option value="${t.id}">${esc(t.name)}</option>`).join('')}</select></div>
-            <div class="field full"><label>ROUND</label><select id="m-round">
-  <option value="Round 1">Round 1</option>
-  <option value="Round 2">Round 2</option>
-  <option value="Quarter Finals">Quarts</option>
-  <option value="Semi Finals">Demi-finales</option>
-  <option value="Final">Finale</option>
-</select></div>
-<div class="field">
-  <label>POSITION (ordre)</label>
-  <input id="m-pos" type="number" placeholder="1">
-</div>
+            <div class="field full"><label>ROUND</label><input id="m-round" placeholder="Demi-finales, Finale..."></div>
             <div class="field"><label>ÉQUIPE 1</label><select id="m-t1"><option value="">—</option>${S.teams.map(t => `<option value="${t.id}">${esc(t.name)}</option>`).join('')}</select></div>
             <div class="field"><label>ÉQUIPE 2</label><select id="m-t2"><option value="">—</option>${S.teams.map(t => `<option value="${t.id}">${esc(t.name)}</option>`).join('')}</select></div>
             <div class="field"><label>SCORE 1</label><input id="m-s1" type="number" placeholder="3"></div>
@@ -1801,20 +1839,7 @@
         const pts_win = parseInt(document.getElementById('m-ptw').value) || 10;
         const pts_lose = parseInt(document.getElementById('m-ptl').value) || 4;
         if (!round || !tournament_id) return;
-        const position = parseInt(document.getElementById('m-pos').value) || 0;
-
-        await sb.from('matches').insert({
-          tournament_id,
-          round,
-          position,
-          team1_id,
-          team2_id,
-          score1: s1 !== '' ? +s1 : null,
-          score2: s2 !== '' ? +s2 : null,
-          winner_id,
-          pts_win,
-          pts_lose
-        });
+        await sb.from('matches').insert({ tournament_id, round, team1_id, team2_id, score1: s1 !== '' ? +s1 : null, score2: s2 !== '' ? +s2 : null, winner_id, pts_win, pts_lose });
         await loadData(); render();
       });
       document.querySelectorAll('[data-del-m]').forEach(el => el.addEventListener('click', async () => {
@@ -1832,13 +1857,6 @@
       });
       document.getElementById('a-back')?.addEventListener('click', () => { S.view = 'home'; render(); });
     }
-    const baseHeight = 100;
-
-    rounds.forEach((round, rIndex) => {
-      round.forEach((match, mIndex) => {
-        match.top = (mIndex * baseHeight * Math.pow(2, rIndex));
-      });
-    });
 
     init();
   </script>
