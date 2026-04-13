@@ -105,6 +105,10 @@
       margin-top: 6px
     }
 
+    .match {
+      position: absolute;
+    }
+
     .nav-item {
       display: flex;
       align-items: center;
@@ -1828,6 +1832,13 @@
       });
       document.getElementById('a-back')?.addEventListener('click', () => { S.view = 'home'; render(); });
     }
+    const baseHeight = 100;
+
+    rounds.forEach((round, rIndex) => {
+      round.forEach((match, mIndex) => {
+        match.top = (mIndex * baseHeight * Math.pow(2, rIndex));
+      });
+    });
 
     init();
   </script>
