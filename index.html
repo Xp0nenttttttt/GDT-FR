@@ -1725,6 +1725,8 @@
 
     // ── Events ────────────────────────────────────────────
     function attachMain() {
+      console.log('Attaching main event listeners');
+      console.log('Current view:', S.view);
       // Nav
       document.querySelectorAll('[data-nav]').forEach(el => el.addEventListener('click', () => {
         S.view = el.dataset.nav; S.prevView = S.view; render();
@@ -1798,45 +1800,60 @@
       }));
 
       // Admin — matchs
-      document.getElementById('create-bracket-btn')?.addEventListener('click', async () => {
-        const tournament_id = parseInt(document.getElementById('bracket-tournament').value);
-        const format = parseInt(document.getElementById('bracket-format').value);
-        if (!tournament_id || !format) return;
+      const createBracketBtn = document.getElementById('create-bracket-btn');
+      console.log('Create bracket button element:', createBracketBtn);
+      if (createBracketBtn) {
+        createBracketBtn.addEventListener('click', async () => {
+          console.log('Create bracket button clicked');
+          const tournament_id = parseInt(document.getElementById('bracket-tournament').value);
+          const format = parseInt(document.getElementById('bracket-format').value);
+          console.log('Tournament ID:', tournament_id, 'Format:', format);
 
-        const rounds = [];
-        if (format === 4) {
-          rounds.push({ name: 'Demi-finales', matches: 2 });
-          rounds.push({ name: 'Finale', matches: 1 });
-        } else if (format === 8) {
-          rounds.push({ name: 'Quarts de finale', matches: 4 });
-          rounds.push({ name: 'Demi-finales', matches: 2 });
-          rounds.push({ name: 'Finale', matches: 1 });
-        } else if (format === 16) {
-          rounds.push({ name: 'Huitièmes de finale', matches: 8 });
-          rounds.push({ name: 'Quarts de finale', matches: 4 });
-          rounds.push({ name: 'Demi-finales', matches: 2 });
-          rounds.push({ name: 'Finale', matches: 1 });
-        }
-
-        let order = 1;
-        for (const round of rounds) {
-          for (let i = 0; i < round.matches; i++) {
-            await sb.from('matches').insert({
-              tournament_id,
-              round: round.name,
-              order: order++,
-              team1_id: null,
-              team2_id: null,
-              score1: null,
-              score2: null,
-              winner_id: null,
-              pts_win: 10,
-              pts_lose: 4
-            });
+          if (!tournament_id || !format) {
+            console.log('Missing tournament_id or format');
+            return;
           }
-        }
-        await loadData(); render();
-      });
+
+          const rounds = [];
+          if (format === 4) {
+            rounds.push({ name: 'Demi-finales', matches: 2 });
+            rounds.push({ name: 'Finale', matches: 1 });
+          } else if (format === 8) {
+            rounds.push({ name: 'Quarts de finale', matches: 4 });
+            rounds.push({ name: 'Demi-finales', matches: 2 });
+            rounds.push({ name: 'Finale', matches: 1 });
+          } else if (format === 16) {
+            rounds.push({ name: 'Huitièmes de finale', matches: 8 });
+            rounds.push({ name: 'Quarts de finale', matches: 4 });
+            rounds.push({ name: 'Demi-finales', matches: 2 });
+            rounds.push({ name: 'Finale', matches: 1 });
+          }
+
+          console.log('Rounds to create:', rounds);
+
+          let order = 1;
+          for (const round of rounds) {
+            for (let i = 0; i < round.matches; i++) {
+              console.log(`Creating match: tournament=${tournament_id}, round=${round.name}, order=${order}`);
+              await sb.from('matches').insert({
+                tournament_id,
+                round: round.name,
+                order: order++,
+                team1_id: null,
+                team2_id: null,
+                score1: null,
+                score2: null,
+                winner_id: null,
+                pts_win: 10,
+                pts_lose: 4
+              });
+            }
+          }
+          console.log('Bracket creation completed, reloading data...');
+          await loadData();
+          render();
+        });
+      }
       document.getElementById('add-match-btn')?.addEventListener('click', async () => {
         const tournament_id = parseInt(document.getElementById('m-tournament').value);
         const round = (document.getElementById('m-round').value || '').trim();
@@ -1870,6 +1887,8 @@
         }
       }));
     }
+
+
 
 
     function attachAuth() {
