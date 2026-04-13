@@ -1686,9 +1686,7 @@
         ${S.matches.length === 0 ? `<div style="padding:16px;color:var(--mu);font-size:13px">Aucun match.</div>` :
           S.matches.map(m => {
             const tour = S.tournaments.find(x => x.id === m.tournament_id); const ta = teamById(m.team1_id); const tb = teamById(m.team2_id);
-            S.matches.map(m => {
-              const tour = S.tournaments.find(x => x.id === m.tournament_id); const ta = teamById(m.team1_id); const tb = teamById(m.team2_id);
-              return `<div class="admin-row">
+            return `<div class="admin-row">
               <span class="n" style="font-size:12px">${esc(tour?.name || '?')} · ${esc(m.round)} · ${ta ? esc(ta.name) : '?'} vs ${tb ? esc(tb.name) : '?'}</span>
               <div style="display:flex;gap:4px;align-items:center">
                 <input type="number" value="${m.order || 1}" data-order-m="${m.id}" style="background:var(--bg3);border:1px solid var(--bd);border-radius:4px;padding:2px 6px;color:var(--tx);font-size:11px;width:50px;text-align:center">
@@ -1706,8 +1704,6 @@
               <span style="font-family:'Orbitron',monospace;font-size:11px;color:var(--mu2)">${m.score1 !== null ? m.score1 : '—'}/${m.score2 !== null ? m.score2 : '—'}</span>
               <button class="btn sm rd" data-del-m="${m.id}">Suppr.</button>
             </div>`;
-            }).join('')
-          }
           }).join('')}
       </div>
     </div>
@@ -1717,14 +1713,14 @@
     // ── Auth ──────────────────────────────────────────────
     function buildAuth() {
       return `<div class="auth-wrap"><div class="auth-box">
-    <div class="auth-title">GD TOUR</div>
-    <div class="auth-sub">Connexion administrateur</div>
-    <div class="field" style="margin-bottom:10px"><label>EMAIL</label><input id="a-email" type="email" placeholder="admin@exemple.com"></div>
-    <div class="field" style="margin-bottom:14px"><label>MOT DE PASSE</label><input id="a-pwd" type="password" placeholder="••••••••"></div>
-    <div id="auth-err"></div>
-    <button class="btn gr" id="a-submit" style="width:100%;margin-top:12px">Se connecter</button>
-    <button class="btn sm" id="a-back" style="width:100%;margin-top:8px;border-color:var(--bd2);color:var(--mu2)">← Retour au site</button>
-  </div></div>`;
+        <div class="auth-title">GD TOUR</div>
+        <div class="auth-sub">Connexion administrateur</div>
+        <div class="field" style="margin-bottom:10px"><label>EMAIL</label><input id="a-email" type="email" placeholder="admin@exemple.com"></div>
+        <div class="field" style="margin-bottom:14px"><label>MOT DE PASSE</label><input id="a-pwd" type="password" placeholder="••••••••"></div>
+        <div id="auth-err"></div>
+        <button class="btn gr" id="a-submit" style="width:100%;margin-top:12px">Se connecter</button>
+        <button class="btn sm" id="a-back" style="width:100%;margin-top:8px;border-color:var(--bd2);color:var(--mu2)">← Retour au site</button>
+      </div></div>`;
     }
 
     // ── Events ────────────────────────────────────────────
@@ -1841,45 +1837,49 @@
         }
         await loadData(); render();
       });
-      const tournament_id = parseInt(document.getElementById('m-tournament').value);
-      const round = (document.getElementById('m-round').value || '').trim();
-      const order = parseInt(document.getElementById('m-order').value) || 1;
-      const team1_id = parseInt(document.getElementById('m-t1').value) || null;
-      const team2_id = parseInt(document.getElementById('m-t2').value) || null;
-      const s1 = document.getElementById('m-s1').value;
-      const s2 = document.getElementById('m-s2').value;
-      const winner_id = parseInt(document.getElementById('m-winner').value) || null;
-      const pts_win = parseInt(document.getElementById('m-ptw').value) || 10;
-      const pts_lose = parseInt(document.getElementById('m-ptl').value) || 4;
-      if (!round || !tournament_id) return;
-      await sb.from('matches').insert({ tournament_id, round, order, team1_id, team2_id, score1: s1 !== '' ? +s1 : null, score2: s2 !== '' ? +s2 : null, winner_id, pts_win, pts_lose });
-      await loadData(); render();
-    });
-    document.querySelectorAll('[data-save-order]').forEach(el => el.addEventListener('click', async () => {
-      const mid = +el.dataset.saveOrder;
-      const inp = document.querySelector(`[data-order-m="${mid}"]`);
-      if (inp) { await sb.from('matches').update({ order: parseInt(inp.value) || 1 }).eq('id', mid); await loadData(); render(); }
-    }));
-    document.querySelectorAll('[data-save-teams]').forEach(el => el.addEventListener('click', async () => {
-      const mid = +el.dataset.saveTeams;
-      const t1Sel = document.querySelector(`[data-team1-m="${mid}"]`);
-      const t2Sel = document.querySelector(`[data-team2-m="${mid}"]`);
-      if (t1Sel && t2Sel) {
-        await sb.from('matches').update({
-          team1_id: parseInt(t1Sel.value) || null,
-          team2_id: parseInt(t2Sel.value) || null
-        }).eq('id', mid);
+      document.getElementById('add-match-btn')?.addEventListener('click', async () => {
+        const tournament_id = parseInt(document.getElementById('m-tournament').value);
+        const round = (document.getElementById('m-round').value || '').trim();
+        const order = parseInt(document.getElementById('m-order').value) || 1;
+        const team1_id = parseInt(document.getElementById('m-t1').value) || null;
+        const team2_id = parseInt(document.getElementById('m-t2').value) || null;
+        const s1 = document.getElementById('m-s1').value;
+        const s2 = document.getElementById('m-s2').value;
+        const winner_id = parseInt(document.getElementById('m-winner').value) || null;
+        const pts_win = parseInt(document.getElementById('m-ptw').value) || 10;
+        const pts_lose = parseInt(document.getElementById('m-ptl').value) || 4;
+        if (!round || !tournament_id) return;
+        await sb.from('matches').insert({ tournament_id, round, order, team1_id, team2_id, score1: s1 !== '' ? +s1 : null, score2: s2 !== '' ? +s2 : null, winner_id, pts_win, pts_lose });
         await loadData(); render();
-      }
-    }));
+      });
+      document.querySelectorAll('[data-save-order]').forEach(el => el.addEventListener('click', async () => {
+        const mid = +el.dataset.saveOrder;
+        const inp = document.querySelector(`[data-order-m="${mid}"]`);
+        if (inp) { await sb.from('matches').update({ order: parseInt(inp.value) || 1 }).eq('id', mid); await loadData(); render(); }
+      }));
+      document.querySelectorAll('[data-save-teams]').forEach(el => el.addEventListener('click', async () => {
+        const mid = +el.dataset.saveTeams;
+        const t1Sel = document.querySelector(`[data-team1-m="${mid}"]`);
+        const t2Sel = document.querySelector(`[data-team2-m="${mid}"]`);
+        if (t1Sel && t2Sel) {
+          await sb.from('matches').update({
+            team1_id: parseInt(t1Sel.value) || null,
+            team2_id: parseInt(t2Sel.value) || null
+          }).eq('id', mid);
+          await loadData(); render();
+        }
+      }));
     }
+
 
     function attachAuth() {
       document.getElementById('a-submit')?.addEventListener('click', async () => {
         const email = (document.getElementById('a-email').value || '').trim();
         const pwd = document.getElementById('a-pwd').value;
         const { data, error } = await sb.auth.signInWithPassword({ email, password: pwd });
-        if (error) { document.getElementById('auth-err').innerHTML = `<div class="err">${esc(error.message)}</div>`; return; }
+        if (error) {
+          document.getElementById('auth-err').innerHTML = `<div class="err">${esc(error.message)}</div>`; return;
+        }
         S.user = data.user; S.view = 'admin'; render();
       });
       document.getElementById('a-back')?.addEventListener('click', () => { S.view = 'home'; render(); });
