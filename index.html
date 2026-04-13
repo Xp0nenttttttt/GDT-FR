@@ -683,84 +683,71 @@
     /* Tournament Bracket Tree */
     .bracket-tree {
       display: flex;
-      gap: 40px;
+      gap: 30px;
       overflow-x: auto;
       padding: 20px 0;
-      position: relative;
-      justify-content: center;
+      position: relative
     }
 
     .bracket-round {
       display: flex;
       flex-direction: column;
-      gap: 25px;
-      min-width: 240px;
-      position: relative;
+      gap: 20px;
+      min-width: 220px;
+      position: relative
     }
 
     .bracket-round-title {
-      font-size: 11px;
+      font-size: 10px;
       color: var(--mu);
       letter-spacing: 1px;
       text-transform: uppercase;
       text-align: center;
-      margin-bottom: 20px;
-      font-weight: 600;
-      background: var(--bg2);
-      padding: 8px 12px;
-      border-radius: 6px;
-      border: 1px solid var(--bd);
+      margin-bottom: 15px;
+      font-weight: 600
     }
 
     .bracket-match {
       position: relative;
       background: var(--bg3);
       border: 1px solid var(--bd);
-      border-radius: 10px;
-      padding: 14px;
+      border-radius: 8px;
+      padding: 12px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      transition: all 0.2s ease;
-    }
-
-    .bracket-match:hover {
-      border-color: var(--bd2);
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      gap: 8px
     }
 
     .bracket-match.winner {
       border-color: var(--gr);
-      background: rgba(34, 197, 94, .08);
-      box-shadow: 0 0 15px rgba(34, 197, 94, 0.2);
+      background: rgba(34, 197, 94, .05)
     }
 
     .bracket-match::after {
       content: '';
       position: absolute;
       top: 50%;
-      right: -40px;
-      width: 40px;
-      height: 2px;
+      right: -30px;
+      width: 30px;
+      height: 1px;
       background: var(--bd);
-      transform: translateY(-50%);
+      transform: translateY(-50%)
     }
 
     .bracket-round:last-child .bracket-match::after {
-      display: none;
+      display: none
     }
 
-    /* Vertical connecting lines between matches in the same round */
+    /* Add vertical lines to connect matches within rounds */
     .bracket-round .bracket-match:not(:last-child)::before {
       content: '';
       position: absolute;
       left: 50%;
-      bottom: -12px;
-      width: 2px;
-      height: 12px;
+      bottom: -10px;
+      width: 1px;
+      height: 10px;
       background: var(--bd);
-      transform: translateX(-50%);
+      transform: translateX(-50%)
     }
 
     .bracket-team {
@@ -768,43 +755,30 @@
       align-items: center;
       justify-content: space-between;
       font-size: 13px;
-      padding: 6px 10px;
-      border-radius: 6px;
-      transition: all 0.2s ease;
-      border: 1px solid transparent;
-    }
-
-    .bracket-team:hover {
-      background: var(--bg2);
-      border-color: var(--bd2);
+      padding: 4px 8px;
+      border-radius: 4px
     }
 
     .bracket-team.winner {
-      background: rgba(34, 197, 94, .15);
-      border-color: rgba(34, 197, 94, .3);
-      color: var(--gr);
-      font-weight: 600;
+      background: rgba(34, 197, 94, .1);
+      color: var(--gr)
     }
 
     .bracket-team.loser {
-      color: var(--mu2);
-      opacity: 0.7;
+      color: var(--mu2)
     }
 
     .bracket-team .name {
       display: flex;
       align-items: center;
-      gap: 8px;
-      font-weight: 500;
-      flex: 1;
+      gap: 6px;
+      font-weight: 500
     }
 
     .bracket-team .score {
       font-family: 'Orbitron', monospace;
-      font-size: 13px;
-      font-weight: 700;
-      min-width: 20px;
-      text-align: center;
+      font-size: 12px;
+      font-weight: 700
     }
 
     /* Team detail */
@@ -1483,8 +1457,8 @@
       return `<div class="bracket-tree">
         ${rounds.map((round, roundIndex) => {
         const roundMatches = matches.filter(m => m.round === round);
-        // Sort matches within round by order field for custom bracket layout
-        roundMatches.sort((a, b) => (a.order || 0) - (b.order || 0));
+        // Sort matches within round for better visual layout
+        roundMatches.sort((a, b) => (a.id || 0) - (b.id || 0));
 
         return `<div class="bracket-round">
             <div class="bracket-round-title">${esc(round)}</div>
@@ -1649,28 +1623,11 @@
     <div class="section">
       <div class="stitle">MATCHS</div>
       <div class="card" style="margin-bottom:10px">
-        <div class="card-head"><span class="card-head-title">CRÉER UN BRACKET PRÉDÉFINI</span></div>
-        <div style="padding:14px 16px">
-          <div class="form-grid">
-            <div class="field"><label>TOURNOI</label><select id="bracket-tournament">${S.tournaments.map(t => `<option value="${t.id}">${esc(t.name)}</option>`).join('')}</select></div>
-            <div class="field"><label>FORMAT</label>
-              <select id="bracket-format">
-                <option value="4">4 équipes (2 rounds)</option>
-                <option value="8">8 équipes (3 rounds)</option>
-                <option value="16">16 équipes (4 rounds)</option>
-              </select>
-            </div>
-          </div>
-          <button class="btn pu" id="create-bracket-btn">+ Créer bracket</button>
-        </div>
-      </div>
-      <div class="card" style="margin-bottom:10px">
         <div class="card-head"><span class="card-head-title">AJOUTER UN MATCH</span></div>
         <div style="padding:14px 16px">
           <div class="form-grid">
             <div class="field full"><label>TOURNOI</label><select id="m-tournament">${S.tournaments.map(t => `<option value="${t.id}">${esc(t.name)}</option>`).join('')}</select></div>
-            <div class="field"><label>ROUND</label><input id="m-round" placeholder="Demi-finales, Finale..."></div>
-            <div class="field"><label>ORDRE</label><input id="m-order" type="number" value="1" placeholder="1" style="width:60px"></div>
+            <div class="field full"><label>ROUND</label><input id="m-round" placeholder="Demi-finales, Finale..."></div>
             <div class="field"><label>ÉQUIPE 1</label><select id="m-t1"><option value="">—</option>${S.teams.map(t => `<option value="${t.id}">${esc(t.name)}</option>`).join('')}</select></div>
             <div class="field"><label>ÉQUIPE 2</label><select id="m-t2"><option value="">—</option>${S.teams.map(t => `<option value="${t.id}">${esc(t.name)}</option>`).join('')}</select></div>
             <div class="field"><label>SCORE 1</label><input id="m-s1" type="number" placeholder="3"></div>
@@ -1688,19 +1645,6 @@
             const tour = S.tournaments.find(x => x.id === m.tournament_id); const ta = teamById(m.team1_id); const tb = teamById(m.team2_id);
             return `<div class="admin-row">
               <span class="n" style="font-size:12px">${esc(tour?.name || '?')} · ${esc(m.round)} · ${ta ? esc(ta.name) : '?'} vs ${tb ? esc(tb.name) : '?'}</span>
-              <div style="display:flex;gap:4px;align-items:center">
-                <input type="number" value="${m.match_order || 1}" data-order-m="${m.id}" style="background:var(--bg3);border:1px solid var(--bd);border-radius:4px;padding:2px 6px;color:var(--tx);font-size:11px;width:50px;text-align:center">
-                <button class="btn sm" data-save-order="${m.id}" style="border-color:var(--bl);color:var(--bl);padding:2px 6px;font-size:10px">OK</button>
-              </div>
-              <div style="display:flex;gap:4px">
-                <select data-team1-m="${m.id}" style="background:var(--bg3);border:1px solid var(--bd);border-radius:4px;padding:2px 4px;color:var(--tx);font-size:10px;width:80px">
-                  <option value="">—</option>${S.teams.map(t => `<option value="${t.id}" ${m.team1_id === t.id ? 'selected' : ''}>${esc(t.name)}</option>`).join('')}
-                </select>
-                <select data-team2-m="${m.id}" style="background:var(--bg3);border:1px solid var(--bd);border-radius:4px;padding:2px 4px;color:var(--tx);font-size:10px;width:80px">
-                  <option value="">—</option>${S.teams.map(t => `<option value="${t.id}" ${m.team2_id === t.id ? 'selected' : ''}>${esc(t.name)}</option>`).join('')}
-                </select>
-                <button class="btn sm gr" data-save-teams="${m.id}" style="padding:2px 6px;font-size:10px">Éq.</button>
-              </div>
               <span style="font-family:'Orbitron',monospace;font-size:11px;color:var(--mu2)">${m.score1 !== null ? m.score1 : '—'}/${m.score2 !== null ? m.score2 : '—'}</span>
               <button class="btn sm rd" data-del-m="${m.id}">Suppr.</button>
             </div>`;
@@ -1713,20 +1657,18 @@
     // ── Auth ──────────────────────────────────────────────
     function buildAuth() {
       return `<div class="auth-wrap"><div class="auth-box">
-        <div class="auth-title">GD TOUR</div>
-        <div class="auth-sub">Connexion administrateur</div>
-        <div class="field" style="margin-bottom:10px"><label>EMAIL</label><input id="a-email" type="email" placeholder="admin@exemple.com"></div>
-        <div class="field" style="margin-bottom:14px"><label>MOT DE PASSE</label><input id="a-pwd" type="password" placeholder="••••••••"></div>
-        <div id="auth-err"></div>
-        <button class="btn gr" id="a-submit" style="width:100%;margin-top:12px">Se connecter</button>
-        <button class="btn sm" id="a-back" style="width:100%;margin-top:8px;border-color:var(--bd2);color:var(--mu2)">← Retour au site</button>
-      </div></div>`;
+    <div class="auth-title">GD TOUR</div>
+    <div class="auth-sub">Connexion administrateur</div>
+    <div class="field" style="margin-bottom:10px"><label>EMAIL</label><input id="a-email" type="email" placeholder="admin@exemple.com"></div>
+    <div class="field" style="margin-bottom:14px"><label>MOT DE PASSE</label><input id="a-pwd" type="password" placeholder="••••••••"></div>
+    <div id="auth-err"></div>
+    <button class="btn gr" id="a-submit" style="width:100%;margin-top:12px">Se connecter</button>
+    <button class="btn sm" id="a-back" style="width:100%;margin-top:8px;border-color:var(--bd2);color:var(--mu2)">← Retour au site</button>
+  </div></div>`;
     }
 
     // ── Events ────────────────────────────────────────────
     function attachMain() {
-      console.log('Attaching main event listeners');
-      console.log('Current view:', S.view);
       // Nav
       document.querySelectorAll('[data-nav]').forEach(el => el.addEventListener('click', () => {
         S.view = el.dataset.nav; S.prevView = S.view; render();
@@ -1800,71 +1742,9 @@
       }));
 
       // Admin — matchs
-      const createBracketBtn = document.getElementById('create-bracket-btn');
-      console.log('Create bracket button element:', createBracketBtn);
-      if (createBracketBtn) {
-        createBracketBtn.addEventListener('click', async () => {
-          console.log('Create bracket button clicked');
-          const tournament_id = parseInt(document.getElementById('bracket-tournament').value);
-          const format = parseInt(document.getElementById('bracket-format').value);
-          console.log('Tournament ID:', tournament_id, 'Format:', format);
-
-          if (!tournament_id || !format) {
-            console.log('Missing tournament_id or format');
-            return;
-          }
-
-          const rounds = [];
-          if (format === 4) {
-            rounds.push({ name: 'Demi-finales', matches: 2 });
-            rounds.push({ name: 'Finale', matches: 1 });
-          } else if (format === 8) {
-            rounds.push({ name: 'Quarts de finale', matches: 4 });
-            rounds.push({ name: 'Demi-finales', matches: 2 });
-            rounds.push({ name: 'Finale', matches: 1 });
-          } else if (format === 16) {
-            rounds.push({ name: 'Huitièmes de finale', matches: 8 });
-            rounds.push({ name: 'Quarts de finale', matches: 4 });
-            rounds.push({ name: 'Demi-finales', matches: 2 });
-            rounds.push({ name: 'Finale', matches: 1 });
-          }
-
-          console.log('Rounds to create:', rounds);
-
-          let order = 1;
-          const matchesToInsert = [];
-          for (const round of rounds) {
-            for (let i = 0; i < round.matches; i++) {
-              console.log(`Preparing match: tournament=${tournament_id}, round=${round.name}, order=${order}`);
-              matchesToInsert.push({
-                tournament_id,
-                round: round.name,
-                match_order: order++,
-                team1_id: null,
-                team2_id: null,
-                score1: null,
-                score2: null,
-                winner_id: null,
-                pts_win: 10,
-                pts_lose: 4
-              });
-            }
-          }
-
-          const { data: bracketData, error: bracketError } = await sb.from('matches').insert(matchesToInsert).select();
-          if (bracketError) {
-            console.error('Supabase create bracket error:', bracketError);
-            return;
-          }
-          console.log('Bracket creation completed, inserted matches:', bracketData);
-          await loadData();
-          render();
-        });
-      }
       document.getElementById('add-match-btn')?.addEventListener('click', async () => {
         const tournament_id = parseInt(document.getElementById('m-tournament').value);
         const round = (document.getElementById('m-round').value || '').trim();
-        const order = parseInt(document.getElementById('m-order').value) || 1;
         const team1_id = parseInt(document.getElementById('m-t1').value) || null;
         const team2_id = parseInt(document.getElementById('m-t2').value) || null;
         const s1 = document.getElementById('m-s1').value;
@@ -1873,56 +1753,20 @@
         const pts_win = parseInt(document.getElementById('m-ptw').value) || 10;
         const pts_lose = parseInt(document.getElementById('m-ptl').value) || 4;
         if (!round || !tournament_id) return;
-        const { data: matchData, error: matchError } = await sb.from('matches').insert({
-          tournament_id,
-          round,
-          match_order: order,
-          team1_id,
-          team2_id,
-          score1: s1 !== '' ? +s1 : null,
-          score2: s2 !== '' ? +s2 : null,
-          winner_id,
-          pts_win,
-          pts_lose
-        }).select();
-        if (matchError) {
-          console.error('Supabase add match error:', matchError);
-          return;
-        }
-        console.log('Match created:', matchData);
-        await loadData();
-        render();
+        await sb.from('matches').insert({ tournament_id, round, team1_id, team2_id, score1: s1 !== '' ? +s1 : null, score2: s2 !== '' ? +s2 : null, winner_id, pts_win, pts_lose });
+        await loadData(); render();
       });
-      document.querySelectorAll('[data-save-order]').forEach(el => el.addEventListener('click', async () => {
-        const mid = +el.dataset.saveOrder;
-        const inp = document.querySelector(`[data-order-m="${mid}"]`);
-        if (inp) { await sb.from('matches').update({ match_order: parseInt(inp.value) || 1 }).eq('id', mid); await loadData(); render(); }
-      }));
-      document.querySelectorAll('[data-save-teams]').forEach(el => el.addEventListener('click', async () => {
-        const mid = +el.dataset.saveTeams;
-        const t1Sel = document.querySelector(`[data-team1-m="${mid}"]`);
-        const t2Sel = document.querySelector(`[data-team2-m="${mid}"]`);
-        if (t1Sel && t2Sel) {
-          await sb.from('matches').update({
-            team1_id: parseInt(t1Sel.value) || null,
-            team2_id: parseInt(t2Sel.value) || null
-          }).eq('id', mid);
-          await loadData(); render();
-        }
+      document.querySelectorAll('[data-del-m]').forEach(el => el.addEventListener('click', async () => {
+        await sb.from('matches').delete().eq('id', +el.dataset.delM); await loadData(); render();
       }));
     }
-
-
-
 
     function attachAuth() {
       document.getElementById('a-submit')?.addEventListener('click', async () => {
         const email = (document.getElementById('a-email').value || '').trim();
         const pwd = document.getElementById('a-pwd').value;
         const { data, error } = await sb.auth.signInWithPassword({ email, password: pwd });
-        if (error) {
-          document.getElementById('auth-err').innerHTML = `<div class="err">${esc(error.message)}</div>`; return;
-        }
+        if (error) { document.getElementById('auth-err').innerHTML = `<div class="err">${esc(error.message)}</div>`; return; }
         S.user = data.user; S.view = 'admin'; render();
       });
       document.getElementById('a-back')?.addEventListener('click', () => { S.view = 'home'; render(); });
