@@ -1832,10 +1832,11 @@
           console.log('Rounds to create:', rounds);
 
           let order = 1;
+          const matchesToInsert = [];
           for (const round of rounds) {
             for (let i = 0; i < round.matches; i++) {
-              console.log(`Creating match: tournament=${tournament_id}, round=${round.name}, order=${order}`);
-              await sb.from('matches').insert({
+              console.log(`Preparing match: tournament=${tournament_id}, round=${round.name}, order=${order}`);
+              matchesToInsert.push({
                 tournament_id,
                 round: round.name,
                 order: order++,
@@ -1849,7 +1850,13 @@
               });
             }
           }
-          console.log('Bracket creation completed, reloading data...');
+
+          const { data: bracketData, error: bracketError } = await sb.from('matches').insert(matchesToInsert).select();
+          if (bracketError) {
+            console.error('Supabase create bracket error:', bracketError);
+            return;
+          }
+          console.log('Bracket creation completed, inserted matches:', bracketData);
           await loadData();
           render();
         });
@@ -1866,8 +1873,25 @@
         const pts_win = parseInt(document.getElementById('m-ptw').value) || 10;
         const pts_lose = parseInt(document.getElementById('m-ptl').value) || 4;
         if (!round || !tournament_id) return;
-        await sb.from('matches').insert({ tournament_id, round, order, team1_id, team2_id, score1: s1 !== '' ? +s1 : null, score2: s2 !== '' ? +s2 : null, winner_id, pts_win, pts_lose });
-        await loadData(); render();
+        const { data: matchData, error: matchError } = await sb.from('matches').insert({
+          tournament_id,
+          round,
+          order,
+          team1_id,
+          team2_id,
+          score1: s1 !== '' ? +s1 : null,
+          score2: s2 !== '' ? +s2 : null,
+          winner_id,
+          pts_win,
+          pts_lose
+        }).select();
+        if (matchError) {
+          console.error('Supabase add match error:', matchError);
+          return;
+        }
+        console.log('Match created:', matchData);
+        await loadData();
+        render();
       });
       document.querySelectorAll('[data-save-order]').forEach(el => el.addEventListener('click', async () => {
         const mid = +el.dataset.saveOrder;
