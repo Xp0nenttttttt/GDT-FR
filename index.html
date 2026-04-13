@@ -1689,7 +1689,7 @@
             return `<div class="admin-row">
               <span class="n" style="font-size:12px">${esc(tour?.name || '?')} · ${esc(m.round)} · ${ta ? esc(ta.name) : '?'} vs ${tb ? esc(tb.name) : '?'}</span>
               <div style="display:flex;gap:4px;align-items:center">
-                <input type="number" value="${m.order || 1}" data-order-m="${m.id}" style="background:var(--bg3);border:1px solid var(--bd);border-radius:4px;padding:2px 6px;color:var(--tx);font-size:11px;width:50px;text-align:center">
+                <input type="number" value="${m.match_order || 1}" data-order-m="${m.id}" style="background:var(--bg3);border:1px solid var(--bd);border-radius:4px;padding:2px 6px;color:var(--tx);font-size:11px;width:50px;text-align:center">
                 <button class="btn sm" data-save-order="${m.id}" style="border-color:var(--bl);color:var(--bl);padding:2px 6px;font-size:10px">OK</button>
               </div>
               <div style="display:flex;gap:4px">
@@ -1839,7 +1839,7 @@
               matchesToInsert.push({
                 tournament_id,
                 round: round.name,
-                order: order++,
+                match_order: order++,
                 team1_id: null,
                 team2_id: null,
                 score1: null,
@@ -1876,7 +1876,7 @@
         const { data: matchData, error: matchError } = await sb.from('matches').insert({
           tournament_id,
           round,
-          order,
+          match_order: order,
           team1_id,
           team2_id,
           score1: s1 !== '' ? +s1 : null,
@@ -1896,7 +1896,7 @@
       document.querySelectorAll('[data-save-order]').forEach(el => el.addEventListener('click', async () => {
         const mid = +el.dataset.saveOrder;
         const inp = document.querySelector(`[data-order-m="${mid}"]`);
-        if (inp) { await sb.from('matches').update({ order: parseInt(inp.value) || 1 }).eq('id', mid); await loadData(); render(); }
+        if (inp) { await sb.from('matches').update({ match_order: parseInt(inp.value) || 1 }).eq('id', mid); await loadData(); render(); }
       }));
       document.querySelectorAll('[data-save-teams]').forEach(el => el.addEventListener('click', async () => {
         const mid = +el.dataset.saveTeams;
