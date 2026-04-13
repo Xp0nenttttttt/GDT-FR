@@ -1049,6 +1049,40 @@
         grid-template-columns: 1fr
       }
     }
+
+    .bracket {
+      display: flex;
+      align-items: flex-start;
+    }
+
+    .round-col {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    /* Taille de base d’un match */
+    .match {
+      height: 80px;
+      margin: 10px 0;
+    }
+
+    /* Espacement progressif par round */
+    .round-col:nth-child(1) .match {
+      margin: 10px 0;
+    }
+
+    .round-col:nth-child(2) .match {
+      margin: 60px 0;
+    }
+
+    .round-col:nth-child(3) .match {
+      margin: 140px 0;
+    }
+
+    .round-col:nth-child(4) .match {
+      margin: 300px 0;
+    }
   </style>
 </head>
 
