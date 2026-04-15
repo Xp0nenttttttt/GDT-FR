@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GD Tournament</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Rajdhani:wght@500;600;700&display=swap"
     rel="stylesheet">
@@ -467,6 +467,20 @@
     .role-player {
       border-color: var(--bd2);
       color: var(--mu2)
+    }
+
+    .title-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: .6px;
+      text-transform: uppercase;
+      color: var(--yl);
+      border: 1px solid rgba(201, 162, 39, .28);
+      background: rgba(201, 162, 39, .08)
     }
 
     /* Tournament cards */
@@ -1132,6 +1146,8 @@
       prevView: 'home',
       detailId: null,     // tournament detail
       teamDetailId: null, // team detail
+      playerDetailId: null, // player detail
+      editPlayerId: null, // admin player edit
       user: null,
       teams: [], players: [], tournaments: [], matches: [],
       loading: true, error: '',
@@ -1203,6 +1219,17 @@
       return `<span class="role-badge role-player">JOUEUR</span>`;
     }
 
+    function titleBadge(title) {
+      if (!title) return '';
+      return `<span class="title-badge">${esc(title)}</span>`;
+    }
+
+    function rankLabel(value) {
+      if (value === null || value === undefined || value === '') return '—';
+      const n = Number(value);
+      return Number.isFinite(n) && n > 0 ? `#${n}` : esc(value);
+    }
+
     // ── Render ────────────────────────────────────────────
     function render() {
       if (S.loading) {
@@ -1257,6 +1284,7 @@
         case 'teams': return buildTeamsList(sortedTeams, pts);
         case 'team-detail': return buildTeamDetail(pts, wins, played);
         case 'players': return buildPlayersPage();
+        case 'player-detail': return buildPlayerDetail(pts);
         case 'ranking-teams': return buildRankingTeams(sortedTeams, pts, wins, played);
         case 'ranking-players': return buildRankingPlayers();
         case 'tournaments': return buildTournaments();
@@ -1308,9 +1336,9 @@
           <table class="lb-table">
             <thead><tr><th>#</th><th>Joueur</th><th class="r">Pts</th></tr></thead>
             <tbody>${S.players.slice(0, 5).map((p, i) => {
-        const team = teamById(p.team_id); return `<tr>
+        const team = teamById(p.team_id); return `<tr class="clickable" data-player-detail="${p.id}">
               <td><span class="rank ${['r1', 'r2', 'r3'][i] || ''}">${i + 1}</span></td>
-              <td><div class="team-cell">${flagHtml(p.flag, 'flag-sm')}${esc(p.name)}${team ? `<div class="team-dot" style="background:${esc(team.color)}"></div>` : ''}${roleBadge(p.role)}</div></td>
+              <td><div class="team-cell">${flagHtml(p.flag, 'flag-sm')}${esc(p.name)}${team ? `<div class="team-dot" style="background:${esc(team.color)}"></div>` : ''}${titleBadge(p.custom_title)}${roleBadge(p.role)}</div></td>
               <td class="pts-cell r">${p.pts}</td>
             </tr>`;
       }).join('')}</tbody>
@@ -1411,20 +1439,102 @@
       const sorted = [...S.players].sort((a, b) => b.pts - a.pts);
       return `
     <div class="page-title">Joueurs</div>
-    <div class="page-sub">Tous les joueurs inscrits en Saison 1</div>
-    <div class="card">
-      <table class="lb-table">
-        <thead><tr><th>#</th><th>Joueur</th><th>Équipe</th><th>Rôle</th><th class="r">Pts</th></tr></thead>
-        <tbody>${sorted.map((p, i) => {
-        const team = teamById(p.team_id); return `<tr>
-          <td><span class="rank ${['r1', 'r2', 'r3'][i] || ''}">${i + 1}</span></td>
-          <td><div class="team-cell">${flagHtml(p.flag, 'flag-sm')}<span style="font-weight:600">${esc(p.name)}</span></div></td>
-          <td>${team ? `<div class="team-cell"><div class="team-dot" style="background:${esc(team.color)}"></div>${esc(team.name)}</div>` : '<span style="color:var(--mu)">—</span>'}</td>
-          <td>${roleBadge(p.role)}</td>
-          <td class="pts-cell r">${p.pts}</td>
-        </tr>`;
-      }).join('')}</tbody>
-      </table>
+    <div class="page-sub">Clique sur un joueur pour voir ses statistiques détaillées</div>
+
+    <div class="summary">
+      <div class="sum-card"><div class="sum-val" style="color:var(--or)">${S.players.length}</div><div class="sum-lbl">JOUEURS</div></div>
+      <div class="sum-card"><div class="sum-val" style="color:var(--yl)">${sorted[0]?.pts || 0}</div><div class="sum-lbl">MEILLEUR SCORE</div></div>
+      <div class="sum-card"><div class="sum-val" style="color:var(--gr)">${S.players.filter(p => p.hardest).length}</div><div class="sum-lbl">HARDST ENR.</div></div>
+      <div class="sum-card"><div class="sum-val" style="color:var(--pu)">${S.players.filter(p => p.custom_title).length}</div><div class="sum-lbl">TITRES</div></div>
+    </div>
+
+    <div class="section">
+      <div class="stitle">CLASSEMENT</div>
+      <div class="card">
+        <table class="lb-table">
+          <thead>
+            <tr><th>#</th><th>Joueur</th><th>Hardest</th><th>AREDL</th><th>Pointercrate</th><th>Titre</th><th class="r">Pts</th></tr>
+          </thead>
+          <tbody>${sorted.map((p, i) => {
+        const team = teamById(p.team_id);
+        return `<tr class="clickable" data-player-detail="${p.id}">
+              <td><span class="rank ${['r1', 'r2', 'r3'][i] || ''}">${i + 1}</span></td>
+              <td><div class="team-cell">${flagHtml(p.flag, 'flag-sm')}<span style="font-weight:600">${esc(p.name)}</span>${team ? `<div class="team-dot" style="background:${esc(team.color)}"></div>` : ''}</div></td>
+              <td>${rankLabel(p.hardest)}</td>
+              <td>${rankLabel(p.aredl_rank)}</td>
+              <td>${rankLabel(p.pointercrate_rank)}</td>
+              <td>${titleBadge(p.custom_title) || '<span style="color:var(--mu)">—</span>'}</td>
+              <td class="pts-cell r">${p.pts}</td>
+            </tr>`;
+      }).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>`;
+    }
+
+    function buildPlayerDetail(pts) {
+      const p = S.players.find(x => x.id === S.playerDetailId);
+      if (!p) return '<p style="color:var(--mu)">Joueur introuvable.</p>';
+      const team = teamById(p.team_id);
+      const related = S.players.filter(x => x.team_id === p.team_id).sort((a, b) => b.pts - a.pts);
+      const title = p.custom_title ? p.custom_title : 'Joueur';
+      return `
+    <button class="back" id="back-btn">← Retour</button>
+    <div style="height:14px"></div>
+    <div class="team-hero">
+      <div class="team-hero-flag">${flagHtml(p.flag, 'flag')}</div>
+      <div class="team-hero-info">
+        <div class="team-hero-name" style="display:flex;flex-wrap:wrap;align-items:center;gap:8px">
+          <span>${esc(p.name)}</span>
+          ${titleBadge(p.custom_title)}
+        </div>
+        <div class="team-hero-desc">${team ? `Équipe : ${esc(team.name)}` : 'Sans équipe'}</div>
+        <div class="team-hero-pts">${p.pts} pts saison</div>
+      </div>
+    </div>
+
+    <div class="summary">
+      <div class="sum-card"><div class="sum-val">${rankLabel(p.hardest)}</div><div class="sum-lbl">HARDEST</div></div>
+      <div class="sum-card"><div class="sum-val">${rankLabel(p.aredl_rank)}</div><div class="sum-lbl">CLASSEMENT AREDL</div></div>
+      <div class="sum-card"><div class="sum-val">${rankLabel(p.pointercrate_rank)}</div><div class="sum-lbl">POINTERCRATE</div></div>
+      <div class="sum-card"><div class="sum-val">${p.pts || 0}</div><div class="sum-lbl">POINTS</div></div>
+    </div>
+
+    <div class="section">
+      <div class="stitle">INFOS</div>
+      <div class="card">
+        <div class="admin-row"><span class="n">Hardest</span><span>${rankLabel(p.hardest)}</span></div>
+        <div class="admin-row"><span class="n">AREDL</span><span>${rankLabel(p.aredl_rank)}</span></div>
+        <div class="admin-row"><span class="n">Pointercrate</span><span>${rankLabel(p.pointercrate_rank)}</span></div>
+        <div class="admin-row"><span class="n">Titre</span><span>${titleBadge(p.custom_title) || '<span style="color:var(--mu)">—</span>'}</span></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="stitle">ÉQUIPE</div>
+      <div class="card">
+        ${team ? `<div class="admin-row">
+            ${flagHtml(team.flag, 'flag-sm')}
+            <div class="team-dot" style="background:${esc(team.color)}"></div>
+            <span class="n">${esc(team.name)}</span>
+            <span style="font-size:11px;color:var(--mu2)">${related.length} joueur${related.length !== 1 ? 's' : ''}</span>
+          </div>` : `<div style="padding:16px;color:var(--mu);font-size:13px">Aucune équipe.</div>`}
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="stitle">JOUEURS DE LA MÊME ÉQUIPE</div>
+      <div class="card">
+        ${related.length ? related.map((x, i) => `
+          <div class="admin-row ${x.id === p.id ? 'clickable' : ''}" ${x.id === p.id ? `data-player-detail="${x.id}"` : ''}>
+            <span class="rank ${['r1', 'r2', 'r3'][i] || ''}">${i + 1}</span>
+            ${flagHtml(x.flag, 'flag-sm')}
+            <span class="n">${esc(x.name)}</span>
+            ${titleBadge(x.custom_title)}
+            <span style="margin-left:auto;font-family:'Rajdhani',sans-serif;font-weight:700;color:var(--or)">${x.pts} pts</span>
+          </div>`).join('') : `<div style="padding:16px;color:var(--mu);font-size:13px">Aucun autre joueur.</div>`}
+      </div>
     </div>`;
     }
 
@@ -1623,6 +1733,42 @@
 
     // ── Admin ─────────────────────────────────────────────
     function buildAdmin() {
+      const editPlayer = S.players.find(p => p.id === S.editPlayerId) || S.players[0] || null;
+      const teamOptions = `<option value="">— Sans équipe —</option>${S.teams.map(t => `<option value="${t.id}" ${editPlayer && editPlayer.team_id === t.id ? 'selected' : ''}>${esc(t.name)}</option>`).join('')}`;
+      const editPlayerCard = !editPlayer
+        ? `<div style="padding:16px;color:var(--mu);font-size:13px">Aucun joueur à modifier.</div>`
+        : `<div style="padding:14px 16px">
+          <div class="form-grid">
+            <div class="field full">
+              <label>JOUEUR À MODIFIER</label>
+              <select id="edit-player-select">
+                ${S.players.map(p => `<option value="${p.id}" ${editPlayer.id === p.id ? 'selected' : ''}>${esc(p.name)}</option>`).join('')}
+              </select>
+            </div>
+            <div class="field"><label>PSEUDO</label><input id="edit-p-name" value="${esc(editPlayer.name || '')}"></div>
+            <div class="field"><label>ÉQUIPE</label>
+              <select id="edit-p-team">${teamOptions}</select>
+            </div>
+            <div class="field"><label>DRAPEAU</label><input id="edit-p-flag" value="${esc(editPlayer.flag || '')}" placeholder="🇫🇷 ou https://..."></div>
+            <div class="field"><label>RÔLE</label>
+              <select id="edit-p-role">
+                <option value="player" ${editPlayer.role === 'player' ? 'selected' : ''}>Joueur</option>
+                <option value="captain" ${editPlayer.role === 'captain' ? 'selected' : ''}>Captain</option>
+                <option value="coach" ${editPlayer.role === 'coach' ? 'selected' : ''}>Coach</option>
+              </select>
+            </div>
+            <div class="field"><label>HARDEST</label><input id="edit-p-hardest" value="${esc(editPlayer.hardest ?? '')}" placeholder="#123"></div>
+            <div class="field"><label>CLASSEMENT AREDL</label><input id="edit-p-aredl" value="${esc(editPlayer.aredl_rank ?? '')}" placeholder="#45"></div>
+            <div class="field"><label>CLASSEMENT POINTERCRATE</label><input id="edit-p-pointercrate" value="${esc(editPlayer.pointercrate_rank ?? '')}" placeholder="#78"></div>
+            <div class="field full"><label>TITRE PERSONNALISÉ</label><input id="edit-p-title" value="${esc(editPlayer.custom_title ?? '')}" placeholder="Vainqueur du tournoi"></div>
+            <div class="field"><label>POINTS</label><input id="edit-p-pts" type="number" value="${editPlayer.pts ?? 0}" placeholder="0"></div>
+          </div>
+          <div class="btn-row">
+            <button class="btn bl" id="save-player-btn">Sauvegarder</button>
+            <button class="btn sm" id="reset-player-btn">Réinitialiser</button>
+          </div>
+        </div>`;
+
       return `
     <div class="page-title">Administration</div>
     <div class="page-sub">Gestion des équipes, joueurs, tournois et matchs</div>
@@ -1656,7 +1802,12 @@
 
     <!-- Joueurs -->
     <div class="section">
-      <div class="stitle">JOUEURS</div>
+      <div class="stitle">MODIFIER UN JOUEUR</div>
+      <div class="card" style="margin-bottom:10px">
+        <div class="card-head"><span class="card-head-title">ÉDITER UN JOUEUR EXISTANT</span></div>
+        ${editPlayerCard}
+      </div>
+
       <div class="card" style="margin-bottom:10px">
         <div class="card-head"><span class="card-head-title">AJOUTER UN JOUEUR</span></div>
         <div style="padding:14px 16px">
@@ -1669,6 +1820,10 @@
             <div class="field"><label>RÔLE</label>
               <select id="p-role"><option value="player">Joueur</option><option value="captain">Captain</option><option value="coach">Coach</option></select>
             </div>
+            <div class="field"><label>HARDEST</label><input id="p-hardest" placeholder="#123"></div>
+            <div class="field"><label>AREDL</label><input id="p-aredl" placeholder="#45"></div>
+            <div class="field"><label>POINTERCRATE</label><input id="p-pointercrate" placeholder="#78"></div>
+            <div class="field full"><label>TITRE PERSONNALISÉ <small style="font-weight:400;color:var(--mu)">ex: Vainqueur du tournoi</small></label><input id="p-title" placeholder="Vainqueur du tournoi"></div>
             <div class="field"><label>POINTS INITIAUX</label><input id="p-pts" type="number" value="0" placeholder="0"></div>
           </div>
           <button class="btn bl" id="add-player-btn">+ Ajouter joueur</button>
@@ -1684,6 +1839,7 @@
             ${roleBadge(p.role)}
             <input type="number" value="${p.pts}" data-pts-player="${p.id}" style="background:var(--bg3);border:1px solid var(--bd);border-radius:5px;padding:3px 8px;color:var(--tx);font-size:12px;width:70px;text-align:center">
             <button class="btn sm bl" data-save-pts="${p.id}">Pts</button>
+            <button class="btn sm pu" data-edit-player="${p.id}">Éditer</button>
             <button class="btn sm rd" data-del-player="${p.id}">Suppr.</button>
           </div>`;
           }).join('')}
@@ -1700,22 +1856,22 @@
             <div class="field full"><label>NOM</label><input id="t-name" placeholder="Weekly Cup #1"></div>
             <div class="field"><label>TYPE</label><select id="t-type"><option value="minor">Hebdomadaire</option><option value="major">Majeur</option></select></div>
             <div class="field"><label>DATE</label><input id="t-date" placeholder="10 Avr 2025"></div>
-            <div class="field"><label>STATUT</label><select id="t-status"><option value="soon">À venir</option><option value="live">En direct</option><option value="done">Terminé</option></select></div>
-            <div class="field"><label>POINTS MAX</label><input id="t-pts" type="number" value="10"></div>
+            <div class="field"><label>STATUT</label><select id="t-status"><option value="soon">À venir</option><option value="live">Live</option><option value="done">Terminé</option></select></div>
+            <div class="field"><label>PTS MAX</label><input id="t-pts" type="number" value="10"></div>
           </div>
-          <button class="btn gr" id="add-tournament-btn">+ Ajouter</button>
+          <button class="btn gr" id="add-tournament-btn">+ Ajouter tournoi</button>
         </div>
       </div>
       <div class="card">
         ${S.tournaments.length === 0 ? `<div style="padding:16px;color:var(--mu);font-size:13px">Aucun tournoi.</div>` :
           S.tournaments.map(t => `<div class="admin-row">
             <span class="n">${esc(t.name)}</span>
-            <select data-status-t="${t.id}" style="background:var(--bg3);border:1px solid var(--bd);border-radius:5px;padding:3px 7px;color:var(--tx);font-size:12px">
+            <select data-status-t="${t.id}" style="background:var(--bg3);border:1px solid var(--bd);border-radius:5px;padding:4px 8px;color:var(--tx);font-size:12px">
               <option value="soon" ${t.status === 'soon' ? 'selected' : ''}>À venir</option>
               <option value="live" ${t.status === 'live' ? 'selected' : ''}>Live</option>
               <option value="done" ${t.status === 'done' ? 'selected' : ''}>Terminé</option>
             </select>
-            <button class="btn sm" data-save-status="${t.id}" style="border-color:var(--bl);color:var(--bl)">Sauver</button>
+            <button class="btn sm bl" data-save-status="${t.id}">Sauver</button>
             <button class="btn sm rd" data-del-t="${t.id}">Suppr.</button>
           </div>`).join('')}
       </div>
@@ -1728,47 +1884,34 @@
         <div class="card-head"><span class="card-head-title">AJOUTER UN MATCH</span></div>
         <div style="padding:14px 16px">
           <div class="form-grid">
-            <div class="field full"><label>TOURNOI</label><select id="m-tournament">${S.tournaments.map(t => `<option value="${t.id}">${esc(t.name)}</option>`).join('')}</select></div>
-            <div class="field full"><label>ROUND</label><input id="m-round" placeholder="Demi-finales, Finale..."></div>
+            <div class="field"><label>TOURNOI</label><select id="m-tournament">${S.tournaments.map(t => `<option value="${t.id}">${esc(t.name)}</option>`).join('')}</select></div>
+            <div class="field"><label>ROUND</label><input id="m-round" placeholder="Quarter Finals"></div>
             <div class="field"><label>ÉQUIPE 1</label><select id="m-t1"><option value="">—</option>${S.teams.map(t => `<option value="${t.id}">${esc(t.name)}</option>`).join('')}</select></div>
             <div class="field"><label>ÉQUIPE 2</label><select id="m-t2"><option value="">—</option>${S.teams.map(t => `<option value="${t.id}">${esc(t.name)}</option>`).join('')}</select></div>
-            <div class="field"><label>SCORE 1</label><input id="m-s1" type="number" placeholder="3"></div>
-            <div class="field"><label>SCORE 2</label><input id="m-s2" type="number" placeholder="1"></div>
-            <div class="field"><label>VAINQUEUR</label><select id="m-winner"><option value="">À jouer</option>${S.teams.map(t => `<option value="${t.id}">${esc(t.name)}</option>`).join('')}</select></div>
+            <div class="field"><label>SCORE 1</label><input id="m-s1" type="number"></div>
+            <div class="field"><label>SCORE 2</label><input id="m-s2" type="number"></div>
+            <div class="field"><label>VAINQUEUR</label><select id="m-winner"><option value="">—</option>${S.teams.map(t => `<option value="${t.id}">${esc(t.name)}</option>`).join('')}</select></div>
             <div class="field"><label>PTS VICTOIRE</label><input id="m-ptw" type="number" value="10"></div>
             <div class="field"><label>PTS DÉFAITE</label><input id="m-ptl" type="number" value="4"></div>
           </div>
-          <button class="btn bl" id="add-match-btn">+ Ajouter match</button>
+          <button class="btn gr" id="add-match-btn">+ Ajouter match</button>
         </div>
       </div>
       <div class="card">
         ${S.matches.length === 0 ? `<div style="padding:16px;color:var(--mu);font-size:13px">Aucun match.</div>` :
-          S.matches.map(m => {
-            const tour = S.tournaments.find(x => x.id === m.tournament_id); const ta = teamById(m.team1_id); const tb = teamById(m.team2_id);
+          S.matches.slice().reverse().map(m => {
+            const t = S.tournaments.find(x => x.id === m.tournament_id), a = teamById(m.team1_id), b = teamById(m.team2_id), w = teamById(m.winner_id);
             return `<div class="admin-row">
-              <span class="n" style="font-size:12px">${esc(tour?.name || '?')} · ${esc(m.round)} · ${ta ? esc(ta.name) : '?'} vs ${tb ? esc(tb.name) : '?'}</span>
-              <span style="font-family:'Rajdhani',sans-serif;font-size:11px;color:var(--mu2)">${m.score1 !== null ? m.score1 : '—'}/${m.score2 !== null ? m.score2 : '—'}</span>
+              <span class="n">${esc(t?.name || '—')}</span>
+              <span style="font-size:11px;color:var(--mu2)">${esc(m.round)}</span>
+              <span style="font-size:11px;color:var(--mu2)">${a ? esc(a.name) : '—'} vs ${b ? esc(b.name) : '—'}</span>
+              <span style="font-size:11px;color:${w ? esc(w.color) : 'var(--mu2)'}">${w ? esc(w.name) : '—'}</span>
               <button class="btn sm rd" data-del-m="${m.id}">Suppr.</button>
             </div>`;
           }).join('')}
       </div>
-    </div>
-    <div id="admin-err"></div>`;
+    </div>`;
     }
-
-    // ── Auth ──────────────────────────────────────────────
-    function buildAuth() {
-      return `<div class="auth-wrap"><div class="auth-box">
-    <div class="auth-title">GD TOUR</div>
-    <div class="auth-sub">Connexion administrateur</div>
-    <div class="field" style="margin-bottom:10px"><label>EMAIL</label><input id="a-email" type="email" placeholder="admin@exemple.com"></div>
-    <div class="field" style="margin-bottom:14px"><label>MOT DE PASSE</label><input id="a-pwd" type="password" placeholder="••••••••"></div>
-    <div id="auth-err"></div>
-    <button class="btn gr" id="a-submit" style="width:100%;margin-top:12px">Se connecter</button>
-    <button class="btn sm" id="a-back" style="width:100%;margin-top:8px;border-color:var(--bd2);color:var(--mu2)">← Retour au site</button>
-  </div></div>`;
-    }
-
     // ── Events ────────────────────────────────────────────
     function attachMain() {
       // Nav
@@ -1782,6 +1925,10 @@
       // Team detail
       document.querySelectorAll('[data-team-detail]').forEach(el => el.addEventListener('click', () => {
         S.teamDetailId = +el.dataset.teamDetail; S.prevView = S.view; S.view = 'team-detail'; render();
+      }));
+      // Player detail
+      document.querySelectorAll('[data-player-detail]').forEach(el => el.addEventListener('click', () => {
+        S.playerDetailId = +el.dataset.playerDetail; S.prevView = S.view; S.view = 'player-detail'; render();
       }));
       // Back
       document.getElementById('back-btn')?.addEventListener('click', () => { S.view = S.prevView || 'home'; render(); });
@@ -1810,11 +1957,49 @@
         const team_id = parseInt(document.getElementById('p-team').value) || null;
         const flag = (document.getElementById('p-flag').value || '').trim();
         const role = document.getElementById('p-role').value;
+        const hardest = (document.getElementById('p-hardest').value || '').trim();
+        const aredl_rank = (document.getElementById('p-aredl').value || '').trim();
+        const pointercrate_rank = (document.getElementById('p-pointercrate').value || '').trim();
+        const custom_title = (document.getElementById('p-title').value || '').trim();
         const pts = parseInt(document.getElementById('p-pts').value) || 0;
         if (!name) return;
-        await sb.from('players').insert({ name, team_id, flag, role, pts });
+        await sb.from('players').insert({ name, team_id, flag, role, hardest, aredl_rank, pointercrate_rank, custom_title, pts });
         await loadData(); render();
       });
+
+      document.getElementById('edit-player-select')?.addEventListener('change', (e) => {
+        S.editPlayerId = parseInt(e.target.value) || null;
+        render();
+      });
+
+      document.getElementById('save-player-btn')?.addEventListener('click', async () => {
+        const pid = S.editPlayerId;
+        if (!pid) return;
+        const name = (document.getElementById('edit-p-name').value || '').trim();
+        const team_id = parseInt(document.getElementById('edit-p-team').value) || null;
+        const flag = (document.getElementById('edit-p-flag').value || '').trim();
+        const role = document.getElementById('edit-p-role').value;
+        const hardest = (document.getElementById('edit-p-hardest').value || '').trim();
+        const aredl_rank = (document.getElementById('edit-p-aredl').value || '').trim();
+        const pointercrate_rank = (document.getElementById('edit-p-pointercrate').value || '').trim();
+        const custom_title = (document.getElementById('edit-p-title').value || '').trim();
+        const pts = parseInt(document.getElementById('edit-p-pts').value) || 0;
+        if (!name) return;
+        await sb.from('players').update({ name, team_id, flag, role, hardest, aredl_rank, pointercrate_rank, custom_title, pts }).eq('id', pid);
+        await loadData();
+        render();
+      });
+
+      document.getElementById('reset-player-btn')?.addEventListener('click', () => {
+        S.editPlayerId = S.players[0]?.id || null;
+        render();
+      });
+
+      document.querySelectorAll('[data-edit-player]').forEach(el => el.addEventListener('click', () => {
+        S.editPlayerId = +el.dataset.editPlayer;
+        render();
+      }));
+
       document.querySelectorAll('[data-save-pts]').forEach(el => el.addEventListener('click', async () => {
         const pid = +el.dataset.savePts;
         const inp = document.querySelector(`[data-pts-player="${pid}"]`);
@@ -1862,18 +2047,6 @@
         await sb.from('matches').delete().eq('id', +el.dataset.delM); await loadData(); render();
       }));
     }
-
-    function attachAuth() {
-      document.getElementById('a-submit')?.addEventListener('click', async () => {
-        const email = (document.getElementById('a-email').value || '').trim();
-        const pwd = document.getElementById('a-pwd').value;
-        const { data, error } = await sb.auth.signInWithPassword({ email, password: pwd });
-        if (error) { document.getElementById('auth-err').innerHTML = `<div class="err">${esc(error.message)}</div>`; return; }
-        S.user = data.user; S.view = 'admin'; render();
-      });
-      document.getElementById('a-back')?.addEventListener('click', () => { S.view = 'home'; render(); });
-    }
-
     init();
   </script>
 </body>
