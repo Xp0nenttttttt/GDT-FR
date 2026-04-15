@@ -7,7 +7,7 @@
   <title>GD Tournament</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Rajdhani:wght@500;600;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;600&display=swap"
     rel="stylesheet">
 
   <!-- ============================================
@@ -28,19 +28,19 @@
 
     :root {
       --bg: #0d1117;
-      --bg2: #161b22;
-      --bg3: #1c2128;
-      --bd: #30363d;
-      --bd2: #3d444d;
-      --tx: #e6edf3;
-      --mu: #4d5566;
-      --mu2: #7d8590;
-      --or: #4183c4;
-      --yl: #c9a227;
-      --bl: #4183c4;
-      --gr: #3fb950;
-      --rd: #f85149;
-      --pu: #a371f7;
+      --bg2: #131b27;
+      --bg3: #1a2333;
+      --bd: #1f2d42;
+      --bd2: #28394f;
+      --tx: #c8d6e8;
+      --mu: #3b5068;
+      --mu2: #6080a0;
+      --or: #4a8fd1;
+      --yl: #c89030;
+      --bl: #3578b8;
+      --gr: #2a9e58;
+      --rd: #c03838;
+      --pu: #7050b0;
     }
 
     html,
@@ -48,7 +48,7 @@
       height: 100%;
       background: var(--bg);
       color: var(--tx);
-      font-family: 'Inter', sans-serif;
+      font-family: 'IBM Plex Sans', sans-serif;
       font-size: 14px
     }
 
@@ -60,9 +60,8 @@
 
     .sidebar {
       width: 210px;
-      background: var(--bg2);
+      background: #0b1220;
       border-right: 1px solid var(--bd);
-      border-top: 3px solid var(--or);
       display: flex;
       flex-direction: column;
       padding: 20px 0;
@@ -83,20 +82,19 @@
     /* Sidebar */
     .logo {
       font-family: 'Rajdhani', sans-serif;
-      font-size: 15px;
-      font-weight: 700;
+      font-size: 13px;
+      font-weight: 900;
       color: var(--or);
-      letter-spacing: 3px;
+      letter-spacing: 2px;
       padding: 0 20px 2px
     }
 
     .logo-sub {
       font-size: 9px;
       color: var(--mu);
-      letter-spacing: 2px;
+      letter-spacing: 1.5px;
       padding: 0 20px 22px;
-      font-family: 'Inter', sans-serif;
-      text-transform: uppercase
+      font-family: 'Rajdhani', sans-serif
     }
 
     .nav-section {
@@ -129,7 +127,7 @@
     .nav-item.active {
       color: var(--or);
       border-left-color: var(--or);
-      background: rgba(65, 131, 196, .06)
+      background: rgba(74, 143, 209, .08)
     }
 
     .nav-item .icon {
@@ -160,21 +158,20 @@
     /* Buttons */
     .btn {
       background: transparent;
-      border: 1px solid var(--or);
+      border: 1.5px solid var(--or);
       color: var(--or);
       padding: 7px 16px;
-      border-radius: 5px;
-      font-family: 'Inter', sans-serif;
+      border-radius: 6px;
+      font-family: 'IBM Plex Sans', sans-serif;
       font-size: 12px;
-      font-weight: 500;
+      font-weight: 600;
       cursor: pointer;
-      transition: all .15s;
-      letter-spacing: .2px
+      transition: all .15s
     }
 
     .btn:hover {
       background: var(--or);
-      color: #fff
+      color: #000
     }
 
     .btn.bl {
@@ -184,7 +181,7 @@
 
     .btn.bl:hover {
       background: var(--bl);
-      color: #fff
+      color: #000
     }
 
     .btn.gr {
@@ -194,7 +191,7 @@
 
     .btn.gr:hover {
       background: var(--gr);
-      color: #fff
+      color: #000
     }
 
     .btn.rd {
@@ -204,7 +201,7 @@
 
     .btn.rd:hover {
       background: var(--rd);
-      color: #fff
+      color: #000
     }
 
     .btn.pu {
@@ -214,7 +211,7 @@
 
     .btn.pu:hover {
       background: var(--pu);
-      color: #fff
+      color: #000
     }
 
     .btn.sm {
@@ -232,19 +229,18 @@
     /* Page */
     .page-title {
       font-family: 'Rajdhani', sans-serif;
-      font-size: 20px;
+      font-size: 22px;
       font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
       color: var(--tx);
-      letter-spacing: .3px;
       margin-bottom: 4px
     }
 
     .page-sub {
       font-size: 12px;
       color: var(--mu2);
-      margin-bottom: 20px;
-      padding-bottom: 20px;
-      border-bottom: 1px solid var(--bd)
+      margin-bottom: 24px
     }
 
     .section {
@@ -252,13 +248,13 @@
     }
 
     .stitle {
-      font-family: 'Inter', sans-serif;
+      font-family: 'IBM Plex Sans', sans-serif;
       font-size: 10px;
       font-weight: 600;
-      letter-spacing: 1.5px;
+      letter-spacing: 2px;
       color: var(--mu2);
-      text-transform: uppercase;
-      margin-bottom: 12px
+      margin-bottom: 12px;
+      text-transform: uppercase
     }
 
     /* Cards */
@@ -272,18 +268,16 @@
     .card-head {
       padding: 11px 16px;
       border-bottom: 1px solid var(--bd);
-      background: rgba(65, 131, 196, .04);
       display: flex;
       align-items: center;
       justify-content: space-between
     }
 
     .card-head-title {
-      font-family: 'Inter', sans-serif;
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 1px;
-      text-transform: uppercase;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: .5px;
       color: var(--mu2)
     }
 
@@ -298,16 +292,14 @@
     .sum-card {
       background: var(--bg2);
       border: 1px solid var(--bd);
-      border-left: 3px solid var(--or);
-      border-radius: 8px;
+      border-radius: 10px;
       padding: 14px 16px
     }
 
     .sum-val {
       font-family: 'Rajdhani', sans-serif;
-      font-size: 22px;
+      font-size: 20px;
       font-weight: 700;
-      letter-spacing: .5px;
       margin-bottom: 4px
     }
 
@@ -353,9 +345,9 @@
     }
 
     .rank {
-      font-family: 'Inter', sans-serif;
+      font-family: 'Rajdhani', sans-serif;
       font-size: 11px;
-      font-weight: 600;
+      font-weight: 700;
       color: var(--mu)
     }
 
@@ -364,11 +356,11 @@
     }
 
     .rank.r2 {
-      color: #8b97a8
+      color: #b0b8c8
     }
 
     .rank.r3 {
-      color: #9e7040
+      color: #cd7c3a
     }
 
     .team-cell {
@@ -453,9 +445,9 @@
     }
 
     .role-captain {
-      border-color: rgba(201, 162, 39, .4);
+      border-color: rgba(200, 144, 48, .35);
       color: var(--yl);
-      background: rgba(201, 162, 39, .06)
+      background: rgba(200, 144, 48, .06)
     }
 
     .role-coach {
@@ -492,13 +484,12 @@
     }
 
     .t-card.major {
-      border-color: var(--bd);
-      border-top: 3px solid var(--or)
+      border-color: rgba(74, 143, 209, .25);
+      background: linear-gradient(135deg, rgba(74, 143, 209, .05), var(--bg2))
     }
 
     .t-card.major:hover {
-      background: var(--bg3);
-      border-top-color: var(--or)
+      background: linear-gradient(135deg, rgba(74, 143, 209, .1), var(--bg3))
     }
 
     .t-type {
@@ -519,15 +510,14 @@
 
     .t-name {
       font-family: 'Rajdhani', sans-serif;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 700;
       color: var(--tx);
-      margin-bottom: 4px;
-      letter-spacing: .3px
+      margin-bottom: 4px
     }
 
     .t-card.major .t-name {
-      font-size: 15px;
+      font-size: 14px;
       color: var(--tx)
     }
 
@@ -566,38 +556,37 @@
       align-items: center;
       gap: 5px;
       font-size: 10px;
-      font-weight: 600;
+      font-weight: 700;
       padding: 3px 9px;
-      border-radius: 4px;
+      border-radius: 20px;
       border: 1px solid;
-      letter-spacing: .3px;
-      font-family: 'Inter', sans-serif
+      letter-spacing: .3px
     }
 
     .status.done {
-      border-color: rgba(63, 185, 80, .25);
+      border-color: rgba(42, 158, 88, .35);
       color: var(--gr);
-      background: rgba(63, 185, 80, .06)
+      background: rgba(42, 158, 88, .06)
     }
 
     .status.live {
-      border-color: rgba(65, 131, 196, .35);
+      border-color: rgba(74, 143, 209, .4);
       color: var(--or);
-      background: rgba(65, 131, 196, .07)
+      background: rgba(74, 143, 209, .08)
     }
 
     .status.soon {
-      border-color: rgba(125, 133, 144, .3);
-      color: var(--mu2);
-      background: rgba(125, 133, 144, .05)
+      border-color: rgba(53, 120, 184, .35);
+      color: var(--bl);
+      background: rgba(53, 120, 184, .06)
     }
 
     .live-dot {
       width: 5px;
       height: 5px;
       border-radius: 50%;
-      background: var(--or);
-      animation: pulse 2s ease-in-out infinite;
+      background: var(--rd);
+      animation: pulse 1s infinite;
       display: inline-block
     }
 
@@ -609,7 +598,7 @@
       }
 
       50% {
-        opacity: .4
+        opacity: .3
       }
     }
 
@@ -687,8 +676,8 @@
       font-size: 9px;
       padding: 2px 8px;
       border-radius: 10px;
-      background: rgba(201, 162, 39, .07);
-      border: 1px solid rgba(201, 162, 39, .2);
+      background: rgba(200, 144, 48, .06);
+      border: 1px solid rgba(200, 144, 48, .2);
       color: var(--yl);
       font-weight: 600;
       white-space: nowrap
@@ -734,7 +723,7 @@
 
     .bracket-match.winner {
       border-color: var(--gr);
-      background: rgba(34, 197, 94, .05)
+      background: rgba(42, 158, 88, .04)
     }
 
     .bracket-match::after {
@@ -774,7 +763,7 @@
     }
 
     .bracket-team.winner {
-      background: rgba(34, 197, 94, .1);
+      background: rgba(42, 158, 88, .08);
       color: var(--gr)
     }
 
@@ -875,7 +864,7 @@
       border-radius: 6px;
       padding: 8px 10px;
       color: var(--tx);
-      font-family: 'Inter', sans-serif;
+      font-family: 'IBM Plex Sans', sans-serif;
       font-size: 13px;
       outline: none;
       width: 100%
@@ -884,7 +873,7 @@
     .field input:focus,
     .field select:focus,
     .field textarea:focus {
-      border-color: var(--bl)
+      border-color: var(--or)
     }
 
     .field select option {
@@ -950,11 +939,11 @@
 
     .auth-title {
       font-family: 'Rajdhani', sans-serif;
-      font-size: 18px;
+      font-size: 14px;
       font-weight: 700;
-      color: var(--tx);
+      color: var(--or);
       margin-bottom: 4px;
-      letter-spacing: 2px
+      letter-spacing: 1px
     }
 
     .auth-sub {
@@ -979,21 +968,20 @@
       border-radius: 6px;
       font-size: 12px;
       cursor: pointer;
-      font-family: 'Inter', sans-serif;
+      font-family: 'IBM Plex Sans', sans-serif;
       white-space: nowrap
     }
 
     .back:hover {
-      border-color: var(--or);
-      color: var(--or)
+      border-color: var(--bd2);
+      color: var(--tx)
     }
 
     .detail-title {
       font-family: 'Rajdhani', sans-serif;
-      font-size: 18px;
+      font-size: 16px;
       font-weight: 700;
-      color: var(--tx);
-      letter-spacing: .3px;
+      color: var(--or);
       margin-bottom: 4px
     }
 
@@ -1020,11 +1008,11 @@
     }
 
     .credits-category-title {
-      font-family: 'Inter', sans-serif;
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--mu2);
-      letter-spacing: 1.5px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--or);
+      letter-spacing: 1px;
       margin-bottom: 16px;
       text-transform: uppercase
     }
@@ -1038,14 +1026,14 @@
     .credits-member {
       padding: 12px;
       background: var(--bg3);
-      border: 1px solid var(--bd);
+      border: 1px solid var(--bd2);
       border-radius: 6px;
       transition: all .2s
     }
 
     .credits-member:hover {
       border-color: var(--or);
-      background: rgba(65, 131, 196, .05)
+      background: rgba(74, 143, 209, .05)
     }
 
     .credits-member-name {
@@ -1059,6 +1047,245 @@
       font-size: 11px;
       color: var(--mu2);
       font-style: italic
+    }
+
+    /* ── Player Detail ── */
+    .player-hero {
+      background: var(--bg2);
+      border: 1px solid var(--bd);
+      border-radius: 4px;
+      padding: 24px 28px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      position: relative;
+      overflow: hidden
+    }
+
+    .player-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, rgba(74, 143, 209, .04) 0%, transparent 60%);
+      pointer-events: none
+    }
+
+    .player-hero-flag {
+      font-size: 48px;
+      line-height: 1;
+      flex-shrink: 0;
+      width: 56px;
+      text-align: center
+    }
+
+    .player-hero-flag img {
+      width: 56px;
+      height: 42px;
+      object-fit: cover;
+      border-radius: 3px
+    }
+
+    .player-hero-body {
+      flex: 1;
+      min-width: 0
+    }
+
+    .player-hero-name {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: var(--tx);
+      line-height: 1.1;
+      margin-bottom: 6px
+    }
+
+    .player-hero-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 4px
+    }
+
+    .player-hero-team {
+      font-size: 12px;
+      color: var(--mu2);
+      display: flex;
+      align-items: center;
+      gap: 5px
+    }
+
+    /* Title badge — the main visual centerpiece */
+    .player-title-wrap {
+      margin-bottom: 22px
+    }
+
+    .player-title-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 22px;
+      border: 1px solid rgba(200, 144, 48, .45);
+      border-radius: 3px;
+      background: linear-gradient(135deg, rgba(200, 144, 48, .08), rgba(200, 144, 48, .03));
+      position: relative
+    }
+
+    .player-title-badge::before,
+    .player-title-badge::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(180deg, transparent, rgba(200, 144, 48, .6), transparent)
+    }
+
+    .player-title-badge::before {
+      left: 0
+    }
+
+    .player-title-badge::after {
+      right: 0
+    }
+
+    .player-title-icon {
+      font-size: 14px;
+      opacity: .8
+    }
+
+    .player-title-text {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--yl)
+    }
+
+    /* Stat cards row */
+    .player-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 20px
+    }
+
+    .player-stat {
+      background: var(--bg2);
+      border: 1px solid var(--bd);
+      border-radius: 4px;
+      padding: 14px 16px;
+      text-align: center
+    }
+
+    .player-stat-val {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 5px
+    }
+
+    .player-stat-lbl {
+      font-size: 9px;
+      color: var(--mu2);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      font-weight: 500
+    }
+
+    .player-stat-src {
+      font-size: 9px;
+      color: var(--mu);
+      margin-top: 3px;
+      letter-spacing: .5px
+    }
+
+    /* Hardest level block */
+    .hardest-block {
+      background: var(--bg2);
+      border: 1px solid var(--bd);
+      border-radius: 4px;
+      padding: 18px 20px;
+      margin-bottom: 20px;
+      position: relative
+    }
+
+    .hardest-label {
+      font-size: 9px;
+      color: var(--mu2);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      font-weight: 600
+    }
+
+    .hardest-rule {
+      display: flex;
+      align-items: center;
+      gap: 12px
+    }
+
+    .hardest-line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--bd2))
+    }
+
+    .hardest-line.r {
+      background: linear-gradient(90deg, var(--bd2), transparent)
+    }
+
+    .hardest-name {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--tx);
+      letter-spacing: 1px;
+      text-align: center
+    }
+
+    .hardest-diamond {
+      width: 6px;
+      height: 6px;
+      background: var(--or);
+      transform: rotate(45deg);
+      flex-shrink: 0;
+      opacity: .7
+    }
+
+    /* Player detail match history */
+    .match-hist-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 14px;
+      border-bottom: 1px solid var(--bd);
+      font-size: 13px
+    }
+
+    .match-hist-row:last-child {
+      border-bottom: none
+    }
+
+    .match-result-w {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--gr);
+      letter-spacing: 1px;
+      min-width: 32px
+    }
+
+    .match-result-l {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--mu2);
+      letter-spacing: 1px;
+      min-width: 32px
     }
 
     /* Mobile */
@@ -1095,7 +1322,7 @@
 
       .nav-item.active {
         border-left: none;
-        background: rgba(65, 131, 196, .12)
+        background: rgba(74, 143, 209, .12)
       }
 
       .main {
@@ -1130,8 +1357,9 @@
     let S = {
       view: 'home',
       prevView: 'home',
-      detailId: null,     // tournament detail
-      teamDetailId: null, // team detail
+      detailId: null,       // tournament detail
+      teamDetailId: null,   // team detail
+      playerDetailId: null, // player detail
       user: null,
       teams: [], players: [], tournaments: [], matches: [],
       loading: true, error: '',
@@ -1259,6 +1487,7 @@
         case 'players': return buildPlayersPage();
         case 'ranking-teams': return buildRankingTeams(sortedTeams, pts, wins, played);
         case 'ranking-players': return buildRankingPlayers();
+        case 'player-detail': return buildPlayerDetail();
         case 'tournaments': return buildTournaments();
         case 'tournament-detail': return buildTournamentDetail(pts);
         case 'credits': return buildCredits();
@@ -1375,10 +1604,10 @@
     <div class="card">
       ${sorted.length === 0
           ? `<div style="padding:20px;color:var(--mu);font-size:13px;text-align:center">Aucun joueur dans cette équipe.</div>`
-          : sorted.map((p, i) => `<div class="player-row">
+          : sorted.map((p, i) => `<div class="player-row clickable" data-player-detail="${p.id}" style="cursor:pointer">
             <span style="font-family:'Rajdhani',sans-serif;font-size:10px;color:var(--mu);min-width:20px">${i + 1}</span>
             ${flagHtml(p.flag, 'flag')}
-            <span class="player-name">${esc(p.name)}</span>
+            <span class="player-name">${esc(p.name)}${p.title ? `<span style="font-size:9px;color:var(--yl);margin-left:6px;font-family:'Rajdhani',sans-serif;opacity:.8">✦ ${esc(p.title)}</span>` : ''}</span>
             ${roleBadge(p.role)}
             <span style="font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;color:var(--or)">${p.pts} pts</span>
           </div>`).join('')}
@@ -1411,14 +1640,14 @@
       const sorted = [...S.players].sort((a, b) => b.pts - a.pts);
       return `
     <div class="page-title">Joueurs</div>
-    <div class="page-sub">Tous les joueurs inscrits en Saison 1</div>
+    <div class="page-sub">Clique sur un joueur pour voir sa fiche</div>
     <div class="card">
       <table class="lb-table">
         <thead><tr><th>#</th><th>Joueur</th><th>Équipe</th><th>Rôle</th><th class="r">Pts</th></tr></thead>
         <tbody>${sorted.map((p, i) => {
-        const team = teamById(p.team_id); return `<tr>
+        const team = teamById(p.team_id); return `<tr class="clickable" data-player-detail="${p.id}">
           <td><span class="rank ${['r1', 'r2', 'r3'][i] || ''}">${i + 1}</span></td>
-          <td><div class="team-cell">${flagHtml(p.flag, 'flag-sm')}<span style="font-weight:600">${esc(p.name)}</span></div></td>
+          <td><div class="team-cell">${flagHtml(p.flag, 'flag-sm')}<span style="font-weight:600">${esc(p.name)}</span>${p.title ? `<span style="font-size:9px;color:var(--yl);letter-spacing:1px;font-family:'Rajdhani',sans-serif;opacity:.8">✦</span>` : ''}</div></td>
           <td>${team ? `<div class="team-cell"><div class="team-dot" style="background:${esc(team.color)}"></div>${esc(team.name)}</div>` : '<span style="color:var(--mu)">—</span>'}</td>
           <td>${roleBadge(p.role)}</td>
           <td class="pts-cell r">${p.pts}</td>
@@ -1479,9 +1708,9 @@
         <thead><tr><th>#</th><th>Joueur</th><th>Équipe</th><th>Rôle</th><th class="r">Points</th></tr></thead>
         <tbody>${sorted.map((p, i) => {
         const team = teamById(p.team_id);
-        return `<tr>
+        return `<tr class="clickable" data-player-detail="${p.id}">
             <td><span class="rank ${['r1', 'r2', 'r3'][i] || ''}">${i + 1}</span></td>
-            <td><div class="team-cell">${flagHtml(p.flag, 'flag-sm')}<span style="font-weight:600">${esc(p.name)}</span></div></td>
+            <td><div class="team-cell">${flagHtml(p.flag, 'flag-sm')}<span style="font-weight:600">${esc(p.name)}</span>${p.title ? `<span style="font-size:9px;color:var(--yl);font-family:'Rajdhani',sans-serif;opacity:.8">✦</span>` : ''}</div></td>
             <td>${team ? `<div class="team-cell"><div class="team-dot" style="background:${esc(team.color)}"></div>${esc(team.name)}</div>` : '<span style="color:var(--mu)">—</span>'}</td>
             <td>${roleBadge(p.role)}</td>
             <td class="pts-cell r">${p.pts}</td>
@@ -1492,15 +1721,113 @@
     </div>`;
     }
 
+    // ── Player Detail ─────────────────────────────────────
+    function buildPlayerDetail() {
+      const p = S.players.find(x => x.id === S.playerDetailId);
+      if (!p) return '<p style="color:var(--mu)">Joueur introuvable.</p>';
+      const team = teamById(p.team_id);
+
+      // Collect match history for this player's team
+      const teamMatches = p.team_id
+        ? S.matches.filter(m => m.team1_id === p.team_id || m.team2_id === p.team_id).filter(m => m.winner_id)
+        : [];
+
+      return `
+    <button class="back" id="back-btn">← Retour</button>
+    <div style="height:16px"></div>
+
+    ${p.title ? `
+    <div class="player-title-wrap">
+      <div class="player-title-badge">
+        <span class="player-title-icon">✦</span>
+        <span class="player-title-text">${esc(p.title)}</span>
+        <span class="player-title-icon">✦</span>
+      </div>
+    </div>` : ''}
+
+    <div class="player-hero">
+      <div class="player-hero-flag">${flagHtml(p.flag, 'flag')}</div>
+      <div class="player-hero-body">
+        <div class="player-hero-name">${esc(p.name)}</div>
+        <div class="player-hero-meta">
+          ${roleBadge(p.role)}
+          ${team ? `<div class="player-hero-team">
+            <div class="team-dot" style="background:${esc(team.color)}"></div>
+            <span style="color:${esc(team.color)};font-weight:600">${esc(team.name)}</span>
+          </div>` : ''}
+        </div>
+        ${p.bio ? `<div style="margin-top:10px;font-size:13px;color:var(--mu2);line-height:1.6">${esc(p.bio)}</div>` : ''}
+      </div>
+    </div>
+
+    <div class="player-stats">
+      <div class="player-stat">
+        <div class="player-stat-val" style="color:var(--or)">${p.pts}</div>
+        <div class="player-stat-lbl">Points tournoi</div>
+        <div class="player-stat-src">Saison 1</div>
+      </div>
+      <div class="player-stat">
+        ${p.aredl_rank ? `
+        <div class="player-stat-val" style="color:var(--yl)">#${p.aredl_rank}</div>
+        <div class="player-stat-lbl">Classement AREDL</div>
+        <div class="player-stat-src">aredl.net</div>` : `
+        <div class="player-stat-val" style="color:var(--mu)">—</div>
+        <div class="player-stat-lbl">Classement AREDL</div>
+        <div class="player-stat-src">non renseigné</div>`}
+      </div>
+      <div class="player-stat">
+        ${p.pc_rank ? `
+        <div class="player-stat-val" style="color:var(--bl)">#${p.pc_rank}</div>
+        <div class="player-stat-lbl">Classement PC</div>
+        <div class="player-stat-src">pointercrate.com</div>` : `
+        <div class="player-stat-val" style="color:var(--mu)">—</div>
+        <div class="player-stat-lbl">Classement PC</div>
+        <div class="player-stat-src">non renseigné</div>`}
+      </div>
+    </div>
+
+    ${p.hardest ? `
+    <div class="stitle">HARDEST</div>
+    <div class="hardest-block">
+      <div class="hardest-rule">
+        <div class="hardest-line"></div>
+        <div class="hardest-diamond"></div>
+        <div class="hardest-name">${esc(p.hardest)}</div>
+        <div class="hardest-diamond"></div>
+        <div class="hardest-line r"></div>
+      </div>
+    </div>` : ''}
+
+    ${teamMatches.length > 0 ? `
+    <div class="stitle">HISTORIQUE MATCHS (équipe)</div>
+    <div class="card">
+      ${teamMatches.map(m => {
+        const ta = teamById(m.team1_id), tb = teamById(m.team2_id);
+        const tour = S.tournaments.find(x => x.id === m.tournament_id);
+        const won = m.winner_id === p.team_id;
+        return `<div class="match-hist-row">
+          <span class="${won ? 'match-result-w' : 'match-result-l'}">${won ? 'VIC' : 'DEF'}</span>
+          <span style="flex:1;font-size:12px;color:var(--mu2)">${esc(tour?.name || '?')} · ${esc(m.round)}</span>
+          <span style="font-size:12px;color:var(--mu2)">
+            <span style="color:${ta?.id === p.team_id ? 'var(--tx)' : 'var(--mu2)'">${esc(ta?.name || '?')}</span>
+          < span style = "font-family:'IBM Plex Mono',monospace;font-size:11px;margin:0 6px" > ${ m.score1 !== null ? m.score1 : '—' }–${ m.score2 !== null ? m.score2 : '—' }</span >
+            <span style="color:${tb?.id === p.team_id ? 'var(--tx)' : 'var(--mu2)'">${esc(tb?.name || '?')}</span>
+          </span >
+        </div > `;
+      }).join('')};
+    </div>` : ''
+      }`;
+  }
+
     // ── Tournaments ───────────────────────────────────────
     function buildTournaments() {
       const major = S.tournaments.filter(t => t.type === 'major');
       const minor = S.tournaments.filter(t => t.type === 'minor');
       return `
-    <div class="page-title">Tournois</div>
-    <div class="page-sub">Tous les événements de la Saison 1</div>
-    ${major.length ? `<div class="section"><div class="stitle">TOURNOIS MAJEURS</div><div class="t-grid">${major.map(t => buildTCard(t, true)).join('')}</div></div>` : ''}
-    ${minor.length ? `<div class="section"><div class="stitle">HEBDOMADAIRES</div><div class="t-grid">${minor.map(t => buildTCard(t)).join('')}</div></div>` : ''}
+      < div class= "page-title" > Tournois</div >
+      <div class="page-sub">Tous les événements de la Saison 1</div>
+    ${ major.length ? `<div class="section"><div class="stitle">TOURNOIS MAJEURS</div><div class="t-grid">${major.map(t => buildTCard(t, true)).join('')}</div></div>` : '' }
+    ${ minor.length ? `<div class="section"><div class="stitle">HEBDOMADAIRES</div><div class="t-grid">${minor.map(t => buildTCard(t)).join('')}</div></div>` : '' }
     ${!major.length && !minor.length ? `<p style="color:var(--mu)">Aucun tournoi créé.</p>` : ''}`;
     }
 
@@ -1670,6 +1997,11 @@
               <select id="p-role"><option value="player">Joueur</option><option value="captain">Captain</option><option value="coach">Coach</option></select>
             </div>
             <div class="field"><label>POINTS INITIAUX</label><input id="p-pts" type="number" value="0" placeholder="0"></div>
+            <div class="field"><label>TITRE PERSONNALISÉ</label><input id="p-title" placeholder="Vainqueur du tournoi..."></div>
+            <div class="field"><label>CLASSEMENT AREDL</label><input id="p-aredl" type="number" placeholder="ex: 42"></div>
+            <div class="field"><label>CLASSEMENT POINTERCRATE</label><input id="p-pc" type="number" placeholder="ex: 156"></div>
+            <div class="field full"><label>HARDEST</label><input id="p-hardest" placeholder="Slaughterhouse, Bloodlust..."></div>
+            <div class="field full"><label>BIO / DESCRIPTION</label><input id="p-bio" placeholder="Court texte de présentation..."></div>
           </div>
           <button class="btn bl" id="add-player-btn">+ Ajouter joueur</button>
         </div>
@@ -1677,14 +2009,20 @@
       <div class="card">
         ${S.players.length === 0 ? `<div style="padding:16px;color:var(--mu);font-size:13px">Aucun joueur.</div>` :
           S.players.map(p => {
-            const team = teamById(p.team_id); return `<div class="admin-row">
+            const team = teamById(p.team_id); return `<div class="admin-row" style="flex-wrap:wrap;gap:8px">
             ${flagHtml(p.flag, 'flag-sm')}
             <span class="n">${esc(p.name)}</span>
             ${team ? `<span style="font-size:11px;color:${esc(team.color)}">${esc(team.name)}</span>` : ''}
             ${roleBadge(p.role)}
-            <input type="number" value="${p.pts}" data-pts-player="${p.id}" style="background:var(--bg3);border:1px solid var(--bd);border-radius:5px;padding:3px 8px;color:var(--tx);font-size:12px;width:70px;text-align:center">
-            <button class="btn sm bl" data-save-pts="${p.id}">Pts</button>
-            <button class="btn sm rd" data-del-player="${p.id}">Suppr.</button>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;width:100%;padding-top:6px;border-top:1px solid var(--bd);margin-top:4px">
+              <input type="number" value="${p.pts}" data-pts-player="${p.id}" style="background:var(--bg3);border:1px solid var(--bd);border-radius:3px;padding:3px 8px;color:var(--tx);font-size:12px;width:70px;text-align:center" placeholder="Pts">
+              <input type="text" value="${esc(p.title || '')}" data-title-player="${p.id}" style="background:var(--bg3);border:1px solid var(--bd);border-radius:3px;padding:3px 8px;color:var(--yl);font-size:12px;width:180px" placeholder="Titre...">
+              <input type="number" value="${p.aredl_rank || ''}" data-aredl-player="${p.id}" style="background:var(--bg3);border:1px solid var(--bd);border-radius:3px;padding:3px 8px;color:var(--tx);font-size:12px;width:80px" placeholder="AREDL #">
+              <input type="number" value="${p.pc_rank || ''}" data-pc-player="${p.id}" style="background:var(--bg3);border:1px solid var(--bd);border-radius:3px;padding:3px 8px;color:var(--tx);font-size:12px;width:80px" placeholder="PC #">
+              <input type="text" value="${esc(p.hardest || '')}" data-hardest-player="${p.id}" style="background:var(--bg3);border:1px solid var(--bd);border-radius:3px;padding:3px 8px;color:var(--tx);font-size:12px;width:160px" placeholder="Hardest...">
+              <button class="btn sm bl" data-save-pts="${p.id}">Sauver</button>
+              <button class="btn sm rd" data-del-player="${p.id}">Suppr.</button>
+            </div>
           </div>`;
           }).join('')}
       </div>
@@ -1783,6 +2121,10 @@
       document.querySelectorAll('[data-team-detail]').forEach(el => el.addEventListener('click', () => {
         S.teamDetailId = +el.dataset.teamDetail; S.prevView = S.view; S.view = 'team-detail'; render();
       }));
+      // Player detail
+      document.querySelectorAll('[data-player-detail]').forEach(el => el.addEventListener('click', () => {
+        S.playerDetailId = +el.dataset.playerDetail; S.prevView = S.view; S.view = 'player-detail'; render();
+      }));
       // Back
       document.getElementById('back-btn')?.addEventListener('click', () => { S.view = S.prevView || 'home'; render(); });
 
@@ -1811,14 +2153,24 @@
         const flag = (document.getElementById('p-flag').value || '').trim();
         const role = document.getElementById('p-role').value;
         const pts = parseInt(document.getElementById('p-pts').value) || 0;
+        const title = (document.getElementById('p-title').value || '').trim() || null;
+        const aredl_rank = parseInt(document.getElementById('p-aredl').value) || null;
+        const pc_rank = parseInt(document.getElementById('p-pc').value) || null;
+        const hardest = (document.getElementById('p-hardest').value || '').trim() || null;
+        const bio = (document.getElementById('p-bio').value || '').trim() || null;
         if (!name) return;
-        await sb.from('players').insert({ name, team_id, flag, role, pts });
+        await sb.from('players').insert({ name, team_id, flag, role, pts, title, aredl_rank, pc_rank, hardest, bio });
         await loadData(); render();
       });
       document.querySelectorAll('[data-save-pts]').forEach(el => el.addEventListener('click', async () => {
         const pid = +el.dataset.savePts;
-        const inp = document.querySelector(`[data-pts-player="${pid}"]`);
-        if (inp) { await sb.from('players').update({ pts: parseInt(inp.value) || 0 }).eq('id', pid); await loadData(); render(); }
+        const pts = parseInt(document.querySelector(`[data-pts-player="${pid}"]`)?.value) || 0;
+        const title = document.querySelector(`[data-title-player="${pid}"]`)?.value?.trim() || null;
+        const aredl_rank = parseInt(document.querySelector(`[data-aredl-player="${pid}"]`)?.value) || null;
+        const pc_rank = parseInt(document.querySelector(`[data-pc-player="${pid}"]`)?.value) || null;
+        const hardest = document.querySelector(`[data-hardest-player="${pid}"]`)?.value?.trim() || null;
+        await sb.from('players').update({ pts, title, aredl_rank, pc_rank, hardest }).eq('id', pid);
+        await loadData(); render();
       }));
       document.querySelectorAll('[data-del-player]').forEach(el => el.addEventListener('click', async () => {
         await sb.from('players').delete().eq('id', +el.dataset.delPlayer); await loadData(); render();
